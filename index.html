@@ -4,53 +4,44 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>BEAST BOTH V2</title>
+<title>BEAST BOTH V3</title>
 <style>
 *{box-sizing:border-box}
 body{background:#000;color:#fff;font-family:Arial;padding:10px;margin:0}
-h1{color:#7CFF00;margin:0;text-align:center;font-size:30px}
-h2{font-size:19px}
+h1{color:#7CFF00;text-align:center;font-size:29px}
 .beast{background:#1a1a1a;border:3px solid #7CFF00;border-radius:16px;padding:12px;margin-top:12px}
 .pepe{border-color:#00FF88}
 .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:10px 0}
 .grid div{background:#000;border-radius:8px;padding:8px;overflow-wrap:anywhere}
 .grid span{color:#aaa;font-size:10px}
-.b{width:100%;padding:13px;border-radius:10px;font-weight:900;border:0;font-size:16px}
+.b{width:100%;padding:13px;border-radius:10px;font-weight:bold;border:0;font-size:16px}
 .row{display:flex;justify-content:space-between;gap:8px;padding:7px 0;border-bottom:1px solid #333;font-size:12px}
 .small{font-size:12px;color:#aaa;text-align:center}
-.green{color:#7CFF00}
-.red{color:#ff3b30}
 </style>
 </head>
 <body>
 
-<h1>🤖 BEAST BOTH V2</h1>
-<p class="small">LIVE MARKET DATA • PAPER TRADING • NO DERIV • NO MT5</p>
+<h1>🤖 BEAST BOTH V3</h1>
+<p class="small">COINBASE MARKET DATA • PAPER TRADING • NO DERIV • NO MT5</p>
 
-<div style="background:#1a1a1a;border-radius:14px;padding:12px;text-align:center;border:2px solid #7CFF00">
+<div style="background:#1a1a1a;border:2px solid #7CFF00;border-radius:14px;padding:12px;text-align:center">
 <div>MY VIRTUAL BALANCE</div>
 <div style="font-size:38px;color:#7CFF00">$<b id="bal">20.0000</b></div>
 <div>Started $20.0000 | Profit: $<b id="profit">0.0000</b></div>
-<div>Wins: <b id="wT" class="green">0</b> |
-Losses: <b id="lT" class="red">0</b> |
-Trades: <b id="trades">0</b></div>
+<div>Wins: <b id="wT">0</b> | Losses: <b id="lT">0</b> | Trades: <b id="trades">0</b></div>
 <div>Open positions: <b id="openCount">0</b>/2</div>
-
-<button class="b" id="autoButton" style="background:#7CFF00;margin-top:10px" onclick="toggleAuto()">
-▶️ START AUTO BEAST
-</button>
-
-<p class="small">Automatic market checks every 15 seconds. Fixed $1 stake per trade.</p>
-<div id="status" style="font-size:12px;color:#aaa">Connecting to market...</div>
+<button class="b" id="autoButton" style="background:#7CFF00;margin-top:10px" onclick="toggleAuto()">▶️ START AUTO BEAST</button>
+<p class="small">Market checks every 15 seconds • Fixed $1 stake</p>
+<div id="status" style="font-size:12px;color:#aaa">Connecting...</div>
 </div>
 
 <div class="beast">
 <h2>🐶 DOGE BEAST - <span id="sigDOGE">WAITING</span></h2>
-<div>Price: <b id="pDOGE" class="green">...</b> <span id="cDOGE"></span></div>
+<div>Price: <b id="pDOGE" style="color:#7CFF00">...</b> <span id="cDOGE"></span></div>
 <div class="grid">
 <div><span>ENTRY</span><br><b id="eDOGE">-</b></div>
-<div><span>TP</span><br><b id="tpDOGE" class="green">-</b></div>
-<div><span>SL</span><br><b id="slDOGE" class="red">-</b></div>
+<div><span>TP</span><br><b id="tpDOGE">-</b></div>
+<div><span>SL</span><br><b id="slDOGE">-</b></div>
 <div><span>STAKE</span><br><b>$1.00</b></div>
 <div><span>LAST RESULT</span><br><b id="lastDOGE">-</b></div>
 <div><span>STREAK</span><br><b id="streakDOGE">0</b></div>
@@ -62,8 +53,8 @@ Trades: <b id="trades">0</b></div>
 <div>Price: <b id="pPEPE" style="color:#00FF88">...</b> <span id="cPEPE"></span></div>
 <div class="grid">
 <div><span>ENTRY</span><br><b id="ePEPE">-</b></div>
-<div><span>TP</span><br><b id="tpPEPE" style="color:#00FF88">-</b></div>
-<div><span>SL</span><br><b id="slPEPE" class="red">-</b></div>
+<div><span>TP</span><br><b id="tpPEPE">-</b></div>
+<div><span>SL</span><br><b id="slPEPE">-</b></div>
 <div><span>STAKE</span><br><b>$1.00</b></div>
 <div><span>LAST RESULT</span><br><b id="lastPEPE">-</b></div>
 <div><span>STREAK</span><br><b id="streakPEPE">0</b></div>
@@ -71,37 +62,24 @@ Trades: <b id="trades">0</b></div>
 </div>
 
 <div style="background:#1a1a1a;border-radius:14px;padding:12px;margin-top:12px">
-<h3 class="green">📓 LIVE TRADE FEED</h3>
-<div id="log">Waiting for market data...</div>
-<button class="b" style="background:#fff;margin-top:10px" onclick="resetAll()">
-RESET BALANCE TO $20
-</button>
+<h3 style="color:#7CFF00">📓 LIVE TRADE FEED</h3>
+<div id="log">No completed trades yet.</div>
+<button class="b" style="background:white;margin-top:10px" onclick="resetAll()">RESET BALANCE TO $20</button>
 </div>
 
-<p class="small">
-TP: 0.5% | SL: 0.3% | Fixed stake: $1.
-No martingale. No random wins.
-Virtual trading only. Market prices may be delayed or unavailable.
-Keep Chrome open while testing.
-</p>
+<p class="small">TP 0.5% • SL 0.3% • Fixed $1 stake • Paper trading only. Price checks can miss movements between scans. Fees and slippage are not included.</p>
 
 <script>
 "use strict";
 
-const START_BALANCE=20;
-const STAKE=1;
-const TP_PERCENT=0.005;
-const SL_PERCENT=0.003;
-const SIGNAL_PERCENT=0.0002;
-const INTERVAL=15000;
-const STORAGE_KEY="beast_both_v2";
-
+const START=20,STAKE=1,TP=.005,SL=.003;
+const SIGNAL=.0002,INTERVAL=15000;
+const KEY="beast_both_v3";
 const names=["DOGE","PEPE"];
+const products={DOGE:"DOGE-USD",PEPE:"PEPE-USD"};
 
 let state={
- balance:20,
- wins:0,
- losses:0,
+ balance:20,wins:0,losses:0,
  positions:{DOGE:null,PEPE:null},
  streak:{DOGE:0,PEPE:0},
  lastResult:{DOGE:"-",PEPE:"-"},
@@ -109,93 +87,67 @@ let state={
 };
 
 let previous={DOGE:null,PEPE:null};
-let auto=false;
-let busy=false;
-let timer=null;
-let lastPrices={DOGE:null,PEPE:null};
+let auto=false,busy=false,timer=null;
 
-function money(n){
- return Number(n).toFixed(4);
+function money(n){return Number(n).toFixed(4)}
+function priceText(n){return Number(n).toFixed(8)}
+
+function save(){
+ try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){}
 }
 
-function priceText(n){
- return Number(n).toFixed(8);
-}
-
-function saveState(){
+function load(){
  try{
-  localStorage.setItem(STORAGE_KEY,JSON.stringify(state));
- }catch(e){
-  console.warn("Could not save account",e);
- }
-}
-
-function loadState(){
- try{
-  const saved=JSON.parse(localStorage.getItem(STORAGE_KEY));
-
-  if(saved && typeof saved.balance==="number"){
-   state={
-    ...state,
-    ...saved,
-    positions:{...state.positions,...saved.positions},
-    streak:{...state.streak,...saved.streak},
-    lastResult:{...state.lastResult,...saved.lastResult},
-    log:Array.isArray(saved.log)?saved.log:[]
+  const s=JSON.parse(localStorage.getItem(KEY));
+  if(s && typeof s.balance==="number"){
+   state={...state,...s,
+    positions:{...state.positions,...s.positions},
+    streak:{...state.streak,...s.streak},
+    lastResult:{...state.lastResult,...s.lastResult},
+    log:Array.isArray(s.log)?s.log:[]
    };
   }
- }catch(e){
-  console.warn("Saved account could not be loaded",e);
- }
+ }catch(e){}
 }
 
 function restoreLog(){
- const log=document.getElementById("log");
- log.textContent="";
-
+ const el=document.getElementById("log");
+ el.textContent="";
  if(!state.log.length){
-  log.textContent="No completed trades yet.";
+  el.textContent="No completed trades yet.";
   return;
  }
-
- state.log.forEach(message=>{
-  const div=document.createElement("div");
-  div.className="row";
-  div.textContent=message;
-  log.appendChild(div);
+ state.log.forEach(m=>{
+  const d=document.createElement("div");
+  d.className="row";
+  d.textContent=m;
+  el.appendChild(d);
  });
 }
 
 function addLog(message,color="#fff"){
- const timestamp=new Date().toLocaleTimeString();
- const full=timestamp+" "+message;
-
- state.log.unshift(full);
+ const line=new Date().toLocaleTimeString()+" "+message;
+ state.log.unshift(line);
  state.log=state.log.slice(0,50);
-
- const log=document.getElementById("log");
- const div=document.createElement("div");
- div.className="row";
- div.textContent=full;
- div.style.color=color;
- log.prepend(div);
-
- saveState();
+ const d=document.createElement("div");
+ d.className="row";
+ d.textContent=line;
+ d.style.color=color;
+ document.getElementById("log").prepend(d);
+ save();
 }
 
 function update(){
  document.getElementById("bal").textContent=money(state.balance);
- document.getElementById("profit").textContent=money(state.balance-START_BALANCE);
+ document.getElementById("profit").textContent=money(state.balance-START);
  document.getElementById("wT").textContent=state.wins;
  document.getElementById("lT").textContent=state.losses;
  document.getElementById("trades").textContent=state.wins+state.losses;
-
  document.getElementById("openCount").textContent=
   names.filter(n=>state.positions[n]).length;
 
  names.forEach(n=>{
   const p=state.positions[n];
-
   document.getElementById("streak"+n).textContent=state.streak[n];
   document.getElementById("last"+n).textContent=state.lastResult[n];
 
@@ -210,118 +162,104 @@ function update(){
    document.getElementById("sl"+n).textContent="-";
   }
  });
-
- saveState();
+ save();
 }
 
-function openPosition(name,side,price){
- if(state.positions[name])return;
- if(state.balance<STAKE){
-  document.getElementById("status").textContent="Insufficient virtual balance.";
-  return;
- }
+function openPosition(n,side,price){
+ if(state.positions[n]||state.balance<STAKE)return;
 
- const tp=side==="BUY"
-  ?price*(1+TP_PERCENT)
-  :price*(1-TP_PERCENT);
-
- const sl=side==="BUY"
-  ?price*(1-SL_PERCENT)
-  :price*(1+SL_PERCENT);
-
- state.positions[name]={
-  side:side,
-  entry:price,
-  tp:tp,
-  sl:sl,
-  stake:STAKE,
-  openedAt:Date.now()
+ state.positions[n]={
+  side,entry:price,
+  tp:price*(side==="BUY"?1+TP:1-TP),
+  sl:price*(side==="BUY"?1-SL:1+SL),
+  stake:STAKE
  };
 
- document.getElementById("sig"+name).textContent="OPEN "+side;
-
- addLog(name+" "+side+" OPENED @ $"+priceText(price));
+ addLog(n+" "+side+" OPEN @ $"+priceText(price));
  update();
 }
 
-function closePosition(name,exitPrice,reason){
- const p=state.positions[name];
+function closePosition(n,exit,reason){
+ const p=state.positions[n];
  if(!p)return;
 
- const change=p.side==="BUY"
-  ?(exitPrice-p.entry)/p.entry
-  :(p.entry-exitPrice)/p.entry;
+ const move=p.side==="BUY"
+  ?(exit-p.entry)/p.entry
+  :(p.entry-exit)/p.entry;
 
- const profit=p.stake*change;
- state.balance+=profit;
+ const pnl=p.stake*move;
+ state.balance+=pnl;
 
- if(profit>0){
+ if(pnl>0){
   state.wins++;
-  state.streak[name]=Math.max(0,state.streak[name])+1;
-  state.lastResult[name]="WIN +$"+money(profit);
+  state.streak[n]=Math.max(0,state.streak[n])+1;
+  state.lastResult[n]="WIN +$"+money(pnl);
  }else{
   state.losses++;
-  state.streak[name]=Math.min(0,state.streak[name])-1;
-  state.lastResult[name]="LOSS -$"+money(Math.abs(profit));
+  state.streak[n]=Math.min(0,state.streak[n])-1;
+  state.lastResult[n]="LOSS -$"+money(Math.abs(pnl));
  }
 
- document.getElementById("last"+name).style.color=
-  profit>0?"#00ff00":"#ff3b30";
+ document.getElementById("last"+n).style.color=
+  pnl>0?"#00ff00":"#ff3b30";
 
- state.positions[name]=null;
-
- addLog(
-  name+" "+reason+" | "+(profit>0?"WIN":"LOSS")+
-  " | P/L $"+money(profit),
-  profit>0?"#00ff00":"#ff3b30"
- );
-
+ state.positions[n]=null;
+ addLog(n+" "+reason+" | P/L $"+money(pnl),
+  pnl>0?"#00ff00":"#ff3b30");
  update();
 }
 
-function checkPosition(name,price){
- const p=state.positions[name];
+function checkPosition(n,price){
+ const p=state.positions[n];
  if(!p)return;
 
  if(p.side==="BUY"){
-  if(price>=p.tp){
-   closePosition(name,p.tp,"TAKE PROFIT");
-  }else if(price<=p.sl){
-   closePosition(name,p.sl,"STOP LOSS");
-  }
+  if(price>=p.tp)closePosition(n,p.tp,"TAKE PROFIT");
+  else if(price<=p.sl)closePosition(n,p.sl,"STOP LOSS");
  }else{
-  if(price<=p.tp){
-   closePosition(name,p.tp,"TAKE PROFIT");
-  }else if(price>=p.sl){
-   closePosition(name,p.sl,"STOP LOSS");
-  }
+  if(price<=p.tp)closePosition(n,p.tp,"TAKE PROFIT");
+  else if(price>=p.sl)closePosition(n,p.sl,"STOP LOSS");
  }
 }
 
-function analyze(name,price){
- const old=previous[name];
+function analyze(n,price){
+ const old=previous[n];
 
  if(old===null){
-  document.getElementById("sig"+name).textContent="LEARNING";
+  document.getElementById("sig"+n).textContent="LEARNING";
   return;
  }
 
- if(state.positions[name]){
-  checkPosition(name,price);
+ if(state.positions[n]){
+  checkPosition(n,price);
   return;
  }
 
- const movement=(price-old)/old;
+ const change=(price-old)/old;
 
- if(movement>=SIGNAL_PERCENT){
-  document.getElementById("sig"+name).textContent="BUY SIGNAL";
-  openPosition(name,"BUY",price);
- }else if(movement<=-SIGNAL_PERCENT){
-  document.getElementById("sig"+name).textContent="SELL SIGNAL";
-  openPosition(name,"SELL",price);
- }else{
-  document.getElementById("sig"+name).textContent="WAITING";
- }
+ if(change>=SIGNAL)openPosition(n,"BUY",price);
+ else if(change<=-SIGNAL)openPosition(n,"SELL",price);
+ else document.getElementById("sig"+n).textContent="WAITING";
+}
+
+async function getPrice(n){
+ const url="https://api.exchange.coinbase.com/products/"+
+  products[n]+"/ticker";
+
+ const response=await fetch(url,{
+  cache:"no-store",
+  headers:{"Accept":"application/json"}
+ });
+
+ if(!response.ok)throw new Error(n+" HTTP "+response.status);
+
+ const data=await response.json();
+ const price=Number(data.price);
+
+ if(!Number.isFinite(price)||price<=0)
+  throw new Error(n+" invalid price");
+
+ return price;
 }
 
 async function scan(){
@@ -329,123 +267,64 @@ async function scan(){
  busy=true;
 
  try{
-  const controller=new AbortController();
-  const timeout=setTimeout(()=>controller.abort(),10000);
+  const results=await Promise.all(names.map(async n=>({
+   name:n,price:await getPrice(n)
+  })));
 
-  let response;
+  // Process only after BOTH prices have been received.
+  for(const item of results){
+   const n=item.name,p=item.price;
 
-  try{
-   response=await fetch(
-    "https://api.binance.com/api/v3/ticker/24hr?symbols=%5B%22DOGEUSDT%22%2C%22PEPEUSDT%22%5D",
-    {
-     signal:controller.signal,
-     cache:"no-store"
-    }
-   );
-  }finally{
-   clearTimeout(timeout);
-  }
+   document.getElementById("p"+n).textContent="$"+priceText(p);
+   document.getElementById("c"+n).textContent="Coinbase spot";
 
-  if(!response.ok){
-   throw new Error("Binance HTTP "+response.status);
-  }
+   if(auto)analyze(n,p);
+   else if(state.positions[n])checkPosition(n,p);
 
-  const data=await response.json();
-
-  const doge=data.find(x=>x.symbol==="DOGEUSDT");
-  const pepe=data.find(x=>x.symbol==="PEPEUSDT");
-
-  if(!doge||!pepe)throw new Error("Trading pairs unavailable");
-
-  const prices={
-   DOGE:Number(doge.lastPrice),
-   PEPE:Number(pepe.lastPrice)
-  };
-
-  const changes={
-   DOGE:Number(doge.priceChangePercent),
-   PEPE:Number(pepe.priceChangePercent)
-  };
-
-  for(const name of names){
-   const price=prices[name];
-
-   if(!Number.isFinite(price)||price<=0){
-    throw new Error("Invalid "+name+" price");
-   }
-
-   document.getElementById("p"+name).textContent=
-    "$"+priceText(price);
-
-   document.getElementById("c"+name).textContent=
-    Number.isFinite(changes[name])
-    ?changes[name].toFixed(2)+"% (24h)"
-    :"";
-
-   if(auto){
-    analyze(name,price);
-   }else if(state.positions[name]){
-    checkPosition(name,price);
-   }
-
-   previous[name]=price;
-   lastPrices[name]=price;
+   previous[n]=p;
   }
 
   document.getElementById("status").textContent=
-   "BINANCE CONNECTED • UPDATED "+new Date().toLocaleTimeString();
+   "COINBASE CONNECTED • "+new Date().toLocaleTimeString();
 
   update();
 
- }catch(error){
+ }catch(e){
   document.getElementById("status").textContent=
-   "MARKET ERROR: "+error.message+" • RETRYING";
-
+   "MARKET UNAVAILABLE: "+e.message+" • RETRYING";
  }finally{
   busy=false;
  }
 }
 
 function toggleAuto(){
+ auto=!auto;
+ document.getElementById("autoButton").textContent=
+  auto?"⏸ STOP AUTO BEAST":"▶️ START AUTO BEAST";
+
  if(auto){
-  auto=false;
-  clearInterval(timer);
-  timer=null;
-  document.getElementById("autoButton").textContent="▶️ START AUTO BEAST";
-  document.getElementById("status").textContent="AUTO TRADING PAUSED";
- }else{
-  auto=true;
-  document.getElementById("autoButton").textContent="⏸ STOP AUTO BEAST";
-  document.getElementById("status").textContent="STARTING MARKET SCAN...";
   scan();
   timer=setInterval(scan,INTERVAL);
+ }else{
+  clearInterval(timer);
+  timer=null;
+  document.getElementById("status").textContent="AUTO PAUSED";
  }
 }
 
 function resetAll(){
- auto=false;
- clearInterval(timer);
- timer=null;
-
+ if(auto)toggleAuto();
  previous={DOGE:null,PEPE:null};
- lastPrices={DOGE:null,PEPE:null};
 
  state={
-  balance:START_BALANCE,
-  wins:0,
-  losses:0,
+  balance:START,wins:0,losses:0,
   positions:{DOGE:null,PEPE:null},
   streak:{DOGE:0,PEPE:0},
   lastResult:{DOGE:"-",PEPE:"-"},
   log:[]
  };
 
- localStorage.removeItem(STORAGE_KEY);
-
- document.getElementById("autoButton").textContent="▶️ START AUTO BEAST";
- document.getElementById("status").textContent="ACCOUNT RESET";
- document.getElementById("log").textContent="Reset to $20.00";
-
+ localStorage.removeItem(KEY);
  names.forEach(n=>{
   document.getElementById("sig"+n).textContent="WAITING";
   document.getElementById("last"+n).style.color="#fff";
@@ -453,15 +332,16 @@ function resetAll(){
   document.getElementById("c"+n).textContent="";
  });
 
+ document.getElementById("log").textContent="Account reset.";
  update();
  scan();
 }
 
-loadState();
+load();
 restoreLog();
 update();
 scan();
-timer=setInterval(()=>{if(!auto)scan();},INTERVAL);
+timer=setInterval(()=>{if(!auto)scan()},INTERVAL);
 
 </script>
 </body>
