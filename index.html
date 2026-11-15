@@ -3,295 +3,296 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>BEAST BOTH V3</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BEAST BOTH V4</title>
 <style>
 *{box-sizing:border-box}
-body{background:#000;color:#fff;font-family:Arial;padding:10px;margin:0}
-h1{color:#7CFF00;text-align:center;font-size:29px}
-.beast{background:#1a1a1a;border:3px solid #7CFF00;border-radius:16px;padding:12px;margin-top:12px}
-.pepe{border-color:#00FF88}
-.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:10px 0}
-.grid div{background:#000;border-radius:8px;padding:8px;overflow-wrap:anywhere}
-.grid span{color:#aaa;font-size:10px}
-.b{width:100%;padding:13px;border-radius:10px;font-weight:bold;border:0;font-size:16px}
-.row{display:flex;justify-content:space-between;gap:8px;padding:7px 0;border-bottom:1px solid #333;font-size:12px}
-.small{font-size:12px;color:#aaa;text-align:center}
+body{margin:0;background:#080d0b;color:#eaffef;font-family:Arial,sans-serif;padding:14px}
+header{text-align:center;margin-bottom:18px}
+h1{color:#39ff88;font-size:25px;margin:8px}
+.sub{color:#9bb5a3;font-size:12px}
+.panel,.coin{background:#101a14;border:1px solid #254b32;border-radius:13px;padding:15px;margin:12px 0}
+h2{font-size:15px;color:#55ff98;margin:0 0 12px}
+.big{font-size:28px;font-weight:bold;color:#42ff91}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
+.stat{background:#17251b;padding:10px 5px;border-radius:8px;text-align:center;font-size:12px}
+.stat b{display:block;font-size:17px;margin-top:5px}
+button{width:100%;padding:14px;border:0;border-radius:9px;font-weight:bold;font-size:15px;margin:5px 0;cursor:pointer}
+.start{background:#28ed7b;color:#06170c}
+.stop{background:#ffb52e;color:#211500}
+.reset{background:#572727;color:white}
+.coin h2{font-size:17px}
+.price{font-size:22px;color:#4aff9a;font-weight:bold;margin:10px 0}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
+.cell{background:#19271d;padding:9px 5px;border-radius:7px;font-size:11px;color:#9bb5a3}
+.cell b{display:block;color:white;font-size:13px;margin-top:5px;overflow-wrap:anywhere}
+.status{font-size:13px;color:#b9d3c1;margin:8px 0}
+.good{color:#48ff91}
+.bad{color:#ff7272}
+.feed{font-size:12px;line-height:1.8;max-height:220px;overflow:auto;color:#c3d8c9}
+.small{font-size:11px;color:#91a99a;line-height:1.6}
 </style>
 </head>
 <body>
+<header>
+<h1>🤖 BEAST BOTH V4</h1>
+<div class="sub">COINBASE MARKET DATA • PAPER TRADING • NO DERIV • NO MT5</div>
+</header>
 
-<h1>🤖 BEAST BOTH V3</h1>
-<p class="small">COINBASE MARKET DATA • PAPER TRADING • NO DERIV • NO MT5</p>
-
-<div style="background:#1a1a1a;border:2px solid #7CFF00;border-radius:14px;padding:12px;text-align:center">
-<div>MY VIRTUAL BALANCE</div>
-<div style="font-size:38px;color:#7CFF00">$<b id="bal">20.0000</b></div>
-<div>Started $20.0000 | Profit: $<b id="profit">0.0000</b></div>
-<div>Wins: <b id="wT">0</b> | Losses: <b id="lT">0</b> | Trades: <b id="trades">0</b></div>
-<div>Open positions: <b id="openCount">0</b>/2</div>
-<button class="b" id="autoButton" style="background:#7CFF00;margin-top:10px" onclick="toggleAuto()">▶️ START AUTO BEAST</button>
-<p class="small">Market checks every 15 seconds • Fixed $1 stake</p>
-<div id="status" style="font-size:12px;color:#aaa">Connecting...</div>
+<div class="panel">
+<h2>MY VIRTUAL BALANCE</h2>
+<div class="big" id="balance">$20.0000</div>
+<div class="small" id="summary">Started $20.0000 | Profit: $0.0000</div>
+<div class="stats">
+<div class="stat">WINS<b id="wins">0</b></div>
+<div class="stat">LOSSES<b id="losses">0</b></div>
+<div class="stat">TRADES<b id="trades">0</b></div>
+</div>
+<div class="status">Open positions: <b id="openCount">0/2</b></div>
+<button class="start" id="autoBtn" onclick="toggleAuto()">▶️ START AUTO BEAST</button>
+<div class="small">Market checks every 15 seconds • Fixed $1 stake</div>
 </div>
 
-<div class="beast">
-<h2>🐶 DOGE BEAST - <span id="sigDOGE">WAITING</span></h2>
-<div>Price: <b id="pDOGE" style="color:#7CFF00">...</b> <span id="cDOGE"></span></div>
+<div class="panel">
+<h2>COINBASE MARKET CONNECTION</h2>
+<div id="connection" class="status">Connecting...</div>
+<div class="small" id="lastUpdate">Waiting for market prices...</div>
+</div>
+
+<div class="coin">
+<h2>🐶 DOGE BEAST</h2>
+<div class="price" id="dogePrice">Loading...</div>
+<div class="status" id="dogeStatus">Waiting for price</div>
 <div class="grid">
-<div><span>ENTRY</span><br><b id="eDOGE">-</b></div>
-<div><span>TP</span><br><b id="tpDOGE">-</b></div>
-<div><span>SL</span><br><b id="slDOGE">-</b></div>
-<div><span>STAKE</span><br><b>$1.00</b></div>
-<div><span>LAST RESULT</span><br><b id="lastDOGE">-</b></div>
-<div><span>STREAK</span><br><b id="streakDOGE">0</b></div>
+<div class="cell">ENTRY<b id="dogeEntry">-</b></div>
+<div class="cell">TAKE PROFIT<b id="dogeTP">-</b></div>
+<div class="cell">STOP LOSS<b id="dogeSL">-</b></div>
+<div class="cell">STAKE<b>$1.00</b></div>
+<div class="cell">LAST RESULT<b id="dogeResult">-</b></div>
+<div class="cell">DIRECTION<b id="dogeSide">-</b></div>
 </div>
 </div>
 
-<div class="beast pepe">
-<h2>🐸 PEPE BEAST - <span id="sigPEPE">WAITING</span></h2>
-<div>Price: <b id="pPEPE" style="color:#00FF88">...</b> <span id="cPEPE"></span></div>
+<div class="coin">
+<h2>🐸 PEPE BEAST</h2>
+<div class="price" id="pepePrice">Loading...</div>
+<div class="status" id="pepeStatus">Waiting for price</div>
 <div class="grid">
-<div><span>ENTRY</span><br><b id="ePEPE">-</b></div>
-<div><span>TP</span><br><b id="tpPEPE">-</b></div>
-<div><span>SL</span><br><b id="slPEPE">-</b></div>
-<div><span>STAKE</span><br><b>$1.00</b></div>
-<div><span>LAST RESULT</span><br><b id="lastPEPE">-</b></div>
-<div><span>STREAK</span><br><b id="streakPEPE">0</b></div>
+<div class="cell">ENTRY<b id="pepeEntry">-</b></div>
+<div class="cell">TAKE PROFIT<b id="pepeTP">-</b></div>
+<div class="cell">STOP LOSS<b id="pepeSL">-</b></div>
+<div class="cell">STAKE<b>$1.00</b></div>
+<div class="cell">LAST RESULT<b id="pepeResult">-</b></div>
+<div class="cell">DIRECTION<b id="pepeSide">-</b></div>
 </div>
 </div>
 
-<div style="background:#1a1a1a;border-radius:14px;padding:12px;margin-top:12px">
-<h3 style="color:#7CFF00">📓 LIVE TRADE FEED</h3>
-<div id="log">No completed trades yet.</div>
-<button class="b" style="background:white;margin-top:10px" onclick="resetAll()">RESET BALANCE TO $20</button>
+<div class="panel">
+<h2>📓 LIVE TRADE FEED</h2>
+<div id="feed" class="feed">BEAST V4 ready. Connect to Coinbase to begin.</div>
 </div>
 
-<p class="small">TP 0.5% • SL 0.3% • Fixed $1 stake • Paper trading only. Price checks can miss movements between scans. Fees and slippage are not included.</p>
+<div class="panel">
+<h2>TRADING SETTINGS</h2>
+<div class="grid">
+<div class="cell">TAKE PROFIT<b>2%</b></div>
+<div class="cell">STOP LOSS<b>1%</b></div>
+<div class="cell">FIXED STAKE<b>$1</b></div>
+<div class="cell">MAX POSITIONS<b>2</b></div>
+<div class="cell">SCAN SPEED<b>15 SEC</b></div>
+<div class="cell">MODE<b>PAPER</b></div>
+</div>
+<button class="reset" onclick="resetAll()">RESET V4 BALANCE TO $20</button>
+<div class="small">Paper trading only. No real orders are sent. Simulated exits use target prices when a price check detects a target crossing. Fees, slippage and movements between checks are not included.</div>
+</div>
 
 <script>
-"use strict";
+const START=20;
+const STAKE=1;
+const TP=0.02;
+const SL=0.01;
+const INTERVAL=15000;
+const SIGNAL=0.0002;
+const KEY="beast_both_v4";
 
-const START=20,STAKE=1,TP=.005,SL=.003;
-const SIGNAL=.0002,INTERVAL=15000;
-const KEY="beast_both_v3";
-const names=["DOGE","PEPE"];
-const products={DOGE:"DOGE-USD",PEPE:"PEPE-USD"};
-
-let state={
- balance:20,wins:0,losses:0,
- positions:{DOGE:null,PEPE:null},
- streak:{DOGE:0,PEPE:0},
- lastResult:{DOGE:"-",PEPE:"-"},
- log:[]
+const coins={
+ DOGE:{product:"DOGE-USD",digits:8},
+ PEPE:{product:"PEPE-USD",digits:10}
 };
 
+let state={
+ balance:START,
+ wins:0,
+ losses:0,
+ total:0,
+ positions:{DOGE:null,PEPE:null},
+ results:{DOGE:"-",PEPE:"-"},
+ feed:[]
+};
+
+let prices={DOGE:null,PEPE:null};
 let previous={DOGE:null,PEPE:null};
-let auto=false,busy=false,timer=null;
+let auto=false;
+let busy=false;
+let timer=null;
 
-function money(n){return Number(n).toFixed(4)}
-function priceText(n){return Number(n).toFixed(8)}
-
+function money(n){return "$"+Number(n).toFixed(4)}
+function fmt(n,symbol){
+ if(n===null || n===undefined)return "-";
+ return Number(n).toFixed(coins[symbol].digits);
+}
+function clock(){
+ return new Date().toLocaleTimeString();
+}
+function log(message){
+ state.feed.unshift(clock()+" "+message);
+ state.feed=state.feed.slice(0,35);
+ save();
+ render();
+}
 function save(){
  try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){}
 }
-
 function load(){
  try{
-  const s=JSON.parse(localStorage.getItem(KEY));
-  if(s && typeof s.balance==="number"){
-   state={...state,...s,
-    positions:{...state.positions,...s.positions},
-    streak:{...state.streak,...s.streak},
-    lastResult:{...state.lastResult,...s.lastResult},
-    log:Array.isArray(s.log)?s.log:[]
-   };
+  const old=JSON.parse(localStorage.getItem(KEY));
+  if(old){
+   state={...state,...old};
+   if(!state.positions)state.positions={DOGE:null,PEPE:null};
+   if(!state.results)state.results={DOGE:"-",PEPE:"-"};
+   for(const s of ["DOGE","PEPE"]){
+    const p=state.positions[s];
+    if(p && (!Number.isFinite(p.entry)||!Number.isFinite(p.tp)||!Number.isFinite(p.sl))){
+     state.positions[s]=null;
+    }
+   }
   }
  }catch(e){}
 }
+function render(){
+ document.getElementById("balance").textContent=money(state.balance);
+ document.getElementById("summary").textContent=
+ "Started $20.0000 | Profit: "+money(state.balance-START);
+ document.getElementById("wins").textContent=state.wins;
+ document.getElementById("losses").textContent=state.losses;
+ document.getElementById("trades").textContent=state.total;
+ let count=Object.values(state.positions).filter(Boolean).length;
+ document.getElementById("openCount").textContent=count+"/2";
 
-function restoreLog(){
- const el=document.getElementById("log");
- el.textContent="";
- if(!state.log.length){
-  el.textContent="No completed trades yet.";
-  return;
+ for(const s of ["DOGE","PEPE"]){
+  const id=s.toLowerCase();
+  const p=state.positions[s];
+  document.getElementById(id+"Price").textContent=
+   prices[s]===null?"Price unavailable":fmt(prices[s],s)+" USD";
+  document.getElementById(id+"Status").textContent=
+   p?"OPEN "+p.side+" • Paper position":
+   "NO OPEN POSITION";
+  document.getElementById(id+"Entry").textContent=p?fmt(p.entry,s):"-";
+  document.getElementById(id+"TP").textContent=p?fmt(p.tp,s):"-";
+  document.getElementById(id+"SL").textContent=p?fmt(p.sl,s):"-";
+  document.getElementById(id+"Result").textContent=state.results[s];
+  document.getElementById(id+"Side").textContent=p?p.side:"-";
  }
- state.log.forEach(m=>{
-  const d=document.createElement("div");
-  d.className="row";
-  d.textContent=m;
-  el.appendChild(d);
- });
+ document.getElementById("feed").innerHTML=
+ state.feed.map(x=>"<div>"+escapeHTML(x)+"</div>").join("");
+}
+function escapeHTML(s){
+ return String(s).replace(/[&<>"']/g,c=>({
+ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+ })[c]);
 }
 
-function addLog(message,color="#fff"){
- const line=new Date().toLocaleTimeString()+" "+message;
- state.log.unshift(line);
- state.log=state.log.slice(0,50);
- const d=document.createElement("div");
- d.className="row";
- d.textContent=line;
- d.style.color=color;
- document.getElementById("log").prepend(d);
- save();
+async function getPrice(s){
+ const url="https://api.exchange.coinbase.com/products/"+
+ coins[s].product+"/ticker";
+ const response=await fetch(url,{cache:"no-store"});
+ if(!response.ok)throw new Error(s+" HTTP "+response.status);
+ const data=await response.json();
+ const p=Number(data.price);
+ if(!Number.isFinite(p)||p<=0)throw new Error(s+" invalid price");
+ return p;
 }
 
-function update(){
- document.getElementById("bal").textContent=money(state.balance);
- document.getElementById("profit").textContent=money(state.balance-START);
- document.getElementById("wT").textContent=state.wins;
- document.getElementById("lT").textContent=state.losses;
- document.getElementById("trades").textContent=state.wins+state.losses;
- document.getElementById("openCount").textContent=
-  names.filter(n=>state.positions[n]).length;
-
- names.forEach(n=>{
-  const p=state.positions[n];
-  document.getElementById("streak"+n).textContent=state.streak[n];
-  document.getElementById("last"+n).textContent=state.lastResult[n];
-
-  if(p){
-   document.getElementById("e"+n).textContent=priceText(p.entry);
-   document.getElementById("tp"+n).textContent=priceText(p.tp);
-   document.getElementById("sl"+n).textContent=priceText(p.sl);
-   document.getElementById("sig"+n).textContent="OPEN "+p.side;
-  }else{
-   document.getElementById("e"+n).textContent="-";
-   document.getElementById("tp"+n).textContent="-";
-   document.getElementById("sl"+n).textContent="-";
-  }
- });
- save();
+function openPosition(s,side,price){
+ if(state.positions[s])return;
+ const entry=price;
+ const tp=side==="BUY"?entry*(1+TP):entry*(1-TP);
+ const sl=side==="BUY"?entry*(1-SL):entry*(1+SL);
+ state.positions[s]={side,entry,tp,sl,stake:STAKE};
+ state.total++;
+ state.results[s]="OPEN "+side;
+ log(s+" "+side+" OPEN @ "+fmt(entry,s));
 }
 
-function openPosition(n,side,price){
- if(state.positions[n]||state.balance<STAKE)return;
-
- state.positions[n]={
-  side,entry:price,
-  tp:price*(side==="BUY"?1+TP:1-TP),
-  sl:price*(side==="BUY"?1-SL:1+SL),
-  stake:STAKE
- };
-
- addLog(n+" "+side+" OPEN @ $"+priceText(price));
- update();
-}
-
-function closePosition(n,exit,reason){
- const p=state.positions[n];
+function closePosition(s,price,reason,target){
+ const p=state.positions[s];
  if(!p)return;
-
- const move=p.side==="BUY"
-  ?(exit-p.entry)/p.entry
-  :(p.entry-exit)/p.entry;
-
+ const exit=target;
+ const move=p.side==="BUY"?
+  (exit-p.entry)/p.entry:
+  (p.entry-exit)/p.entry;
  const pnl=p.stake*move;
  state.balance+=pnl;
-
- if(pnl>0){
-  state.wins++;
-  state.streak[n]=Math.max(0,state.streak[n])+1;
-  state.lastResult[n]="WIN +$"+money(pnl);
- }else{
-  state.losses++;
-  state.streak[n]=Math.min(0,state.streak[n])-1;
-  state.lastResult[n]="LOSS -$"+money(Math.abs(pnl));
- }
-
- document.getElementById("last"+n).style.color=
-  pnl>0?"#00ff00":"#ff3b30";
-
- state.positions[n]=null;
- addLog(n+" "+reason+" | P/L $"+money(pnl),
-  pnl>0?"#00ff00":"#ff3b30");
- update();
+ if(pnl>0)state.wins++;
+ else state.losses++;
+ state.results[s]=reason+" "+(pnl>=0?"+":"")+money(pnl);
+ state.positions[s]=null;
+ log(s+" "+reason+" | P/L "+money(pnl));
 }
 
-function checkPosition(n,price){
- const p=state.positions[n];
+function managePosition(s,price){
+ const p=state.positions[s];
  if(!p)return;
-
  if(p.side==="BUY"){
-  if(price>=p.tp)closePosition(n,p.tp,"TAKE PROFIT");
-  else if(price<=p.sl)closePosition(n,p.sl,"STOP LOSS");
+  if(price>=p.tp)closePosition(s,price,"TAKE PROFIT",p.tp);
+  else if(price<=p.sl)closePosition(s,price,"STOP LOSS",p.sl);
  }else{
-  if(price<=p.tp)closePosition(n,p.tp,"TAKE PROFIT");
-  else if(price>=p.sl)closePosition(n,p.sl,"STOP LOSS");
+  if(price<=p.tp)closePosition(s,price,"TAKE PROFIT",p.tp);
+  else if(price>=p.sl)closePosition(s,price,"STOP LOSS",p.sl);
  }
 }
 
-function analyze(n,price){
- const old=previous[n];
-
- if(old===null){
-  document.getElementById("sig"+n).textContent="LEARNING";
-  return;
- }
-
- if(state.positions[n]){
-  checkPosition(n,price);
-  return;
- }
-
- const change=(price-old)/old;
-
- if(change>=SIGNAL)openPosition(n,"BUY",price);
- else if(change<=-SIGNAL)openPosition(n,"SELL",price);
- else document.getElementById("sig"+n).textContent="WAITING";
-}
-
-async function getPrice(n){
- const url="https://api.exchange.coinbase.com/products/"+
-  products[n]+"/ticker";
-
- const response=await fetch(url,{
-  cache:"no-store",
-  headers:{"Accept":"application/json"}
- });
-
- if(!response.ok)throw new Error(n+" HTTP "+response.status);
-
- const data=await response.json();
- const price=Number(data.price);
-
- if(!Number.isFinite(price)||price<=0)
-  throw new Error(n+" invalid price");
-
- return price;
+function signal(s,price){
+ if(!auto||state.positions[s]||previous[s]===null)return;
+ const change=(price-previous[s])/previous[s];
+ if(change>=SIGNAL)openPosition(s,"BUY",price);
+ else if(change<=-SIGNAL)openPosition(s,"SELL",price);
 }
 
 async function scan(){
  if(busy)return;
  busy=true;
-
+ let successes=0;
+ let errors=[];
  try{
-  const results=await Promise.all(names.map(async n=>({
-   name:n,price:await getPrice(n)
-  })));
-
-  // Process only after BOTH prices have been received.
-  for(const item of results){
-   const n=item.name,p=item.price;
-
-   document.getElementById("p"+n).textContent="$"+priceText(p);
-   document.getElementById("c"+n).textContent="Coinbase spot";
-
-   if(auto)analyze(n,p);
-   else if(state.positions[n])checkPosition(n,p);
-
-   previous[n]=p;
+  for(const s of ["DOGE","PEPE"]){
+   try{
+    const p=await getPrice(s);
+    const old=previous[s];
+    prices[s]=p;
+    successes++;
+    managePosition(s,p);
+    if(old!==null)signal(s,p);
+    previous[s]=p;
+   }catch(e){
+    errors.push(e.message);
+   }
   }
-
-  document.getElementById("status").textContent=
-   "COINBASE CONNECTED • "+new Date().toLocaleTimeString();
-
-  update();
-
- }catch(e){
-  document.getElementById("status").textContent=
-   "MARKET UNAVAILABLE: "+e.message+" • RETRYING";
+  if(successes>0){
+   document.getElementById("connection").innerHTML=
+    '<span class="good">COINBASE CONNECTED</span>';
+   document.getElementById("lastUpdate").textContent=
+    "Last successful check: "+clock()+" • "+successes+"/2 markets updated";
+  }
+  if(errors.length){
+   document.getElementById("connection").innerHTML=
+    '<span class="bad">PARTIAL MARKET ERROR: '+escapeHTML(errors.join(" | "))+'</span>';
+  }
+  if(successes===0){
+   document.getElementById("connection").innerHTML=
+    '<span class="bad">MARKET UNAVAILABLE • RETRYING</span>';
+  }
+  render();
  }finally{
   busy=false;
  }
@@ -299,50 +300,44 @@ async function scan(){
 
 function toggleAuto(){
  auto=!auto;
- document.getElementById("autoButton").textContent=
-  auto?"⏸ STOP AUTO BEAST":"▶️ START AUTO BEAST";
-
+ const btn=document.getElementById("autoBtn");
  if(auto){
+  btn.textContent="⏸ PAUSE AUTO BEAST";
+  btn.className="stop";
+  log("AUTO BEAST STARTED");
   scan();
   timer=setInterval(scan,INTERVAL);
  }else{
+  btn.textContent="▶️ START AUTO BEAST";
+  btn.className="start";
   clearInterval(timer);
   timer=null;
-  document.getElementById("status").textContent="AUTO PAUSED";
+  log("AUTO BEAST PAUSED");
  }
 }
 
 function resetAll(){
- if(auto)toggleAuto();
- previous={DOGE:null,PEPE:null};
-
+ if(!confirm("Reset V4 paper balance, positions and trade history to $20?"))return;
+ auto=false;
+ clearInterval(timer);
+ timer=null;
  state={
-  balance:START,wins:0,losses:0,
+  balance:START,wins:0,losses:0,total:0,
   positions:{DOGE:null,PEPE:null},
-  streak:{DOGE:0,PEPE:0},
-  lastResult:{DOGE:"-",PEPE:"-"},
-  log:[]
+  results:{DOGE:"-",PEPE:"-"},
+  feed:["V4 paper balance reset to $20"]
  };
-
- localStorage.removeItem(KEY);
- names.forEach(n=>{
-  document.getElementById("sig"+n).textContent="WAITING";
-  document.getElementById("last"+n).style.color="#fff";
-  document.getElementById("p"+n).textContent="...";
-  document.getElementById("c"+n).textContent="";
- });
-
- document.getElementById("log").textContent="Account reset.";
- update();
+ previous={DOGE:null,PEPE:null};
+ document.getElementById("autoBtn").textContent="▶️ START AUTO BEAST";
+ document.getElementById("autoBtn").className="start";
+ save();
+ render();
  scan();
 }
 
 load();
-restoreLog();
-update();
+render();
 scan();
-timer=setInterval(()=>{if(!auto)scan()},INTERVAL);
-
 </script>
 </body>
 </html>
