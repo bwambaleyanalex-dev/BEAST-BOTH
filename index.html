@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>BEAST BOTH V5 — Paper Trading</title>
+<title>BEAST BOTH V5.1 — Paper Trading</title>
 <style>
 :root{--lime:#7cff00;--green:#00ff88;--red:#ff5148;--bg:#080808;--panel:#191919;--muted:#aaa}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:#fff;font-family:Arial,sans-serif;padding:12px;max-width:850px;margin:auto}
@@ -14,7 +14,7 @@ button{border:0;border-radius:10px;padding:13px;font-weight:bold;font-size:15px;
 @media(max-width:430px){.stats,.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.settings{grid-template-columns:1fr 1fr}.amount{font-size:33px}}
 </style></head>
 <body>
-<h1>🤖 BEAST BOTH V5</h1>
+<h1>🤖 BEAST BOTH V5.1</h1>
 <p class="sub">COINBASE EXCHANGE MARKET DATA • PAPER TRADING ONLY • NO DERIV • NO MT5</p>
 <section class="panel balance">
  <div>MY VIRTUAL EQUITY</div><div class="amount">$<span id="equity">20.00</span></div>
@@ -71,10 +71,11 @@ function getSettings(){const stake=Number($('stakeInput').value),tp=Number($('tp
 function ema(values,period){const k=2/(period+1);let v=values[0];for(let i=1;i<values.length;i++)v=values[i]*k+v*(1-k);return v;}
 function rsi(values,period=14){if(values.length<=period)return 50;let gains=0,losses=0;for(let i=values.length-period;i<values.length;i++){const d=values[i]-values[i-1];if(d>0)gains+=d;else losses-=d;}if(losses===0)return 100;return 100-(100/(1+gains/losses));}
 async function fetchCandles(symbol){const product=PRODUCTS[symbol];const url=`https://api.exchange.coinbase.com/products/${product}/candles?granularity=60`;const response=await fetch(url,{headers:{'Accept':'application/json'}});if(!response.ok)throw Error(`${product}: Coinbase HTTP ${response.status}`);const raw=await response.json();if(!Array.isArray(raw)||raw.length<30)throw Error(`${product}: insufficient candle data`);return raw.map(c=>({time:Number(c[0]),low:Number(c[1]),high:Number(c[2]),open:Number(c[3]),close:Number(c[4]),volume:Number(c[5])})).sort((a,b)=>a.time-b.time);}
-function analyse(candles){const closed=candles.slice(0,-1);if(closed.length<25)return{side:null,reason:'Waiting for enough completed 1-minute candles.'};const closes=closed.map(c=>c.close);const e9=ema(closes.slice(-40),9),e21=ema(closes.slice(-60),21),rv=rsi(closes,14);const last=closes.at(-1),prev=closes.at(-2),prev2=closes.at(-3);const rising=last>prev&&prev>prev2,falling=last<prev&&prev<prev2;
- if(e9>e21&&last>e9&&rising&&rv>=52&&rv<=70)return{side:'BUY',reason:`Bullish: EMA9 above EMA21, rising candles, RSI ${rv.toFixed(1)}.`,candle:closed.at(-1).time};
- if(e9<e21&&last<e9&&falling&&rv>=30&&rv<=48)return{side:'SELL',reason:`Bearish: EMA9 below EMA21, falling candles, RSI ${rv.toFixed(1)}.`,candle:closed.at(-1).time};
- return{side:null,reason:`No confirmed setup · RSI ${rv.toFixed(1)} · EMA9 ${e9>e21?'above':'below'} EMA21.`,candle:closed.at(-1).time};}
+function analyse(candles){const closed=candles.slice(0,-1);if(closed.length<25)return{side:null,reason:'Waiting for enough completed 1-minute candles.'};const closes=closed.map(c=>c.close);const e9=ema(closes.slice(-40),9),e21=ema(closes.slice(-60),21),rv=rsi(closes,14);const last=closes.at(-1),prev=closes.at(-2);const rising=last>prev,falling=last<prev;const candle=closed.at(-1).time;
+ // One completed candle of momentum is enough; do not demand three consecutive candles.
+ if(e9>e21&&last>e9&&rising&&rv>=50&&rv<=72)return{side:'BUY',reason:`BUY confirmed · EMA9 above EMA21 · latest candle rising · RSI ${rv.toFixed(1)}.`,candle};
+ if(e9<e21&&last<e9&&falling&&rv>=28&&rv<=50)return{side:'SELL',reason:`SELL confirmed · EMA9 below EMA21 · latest candle falling · RSI ${rv.toFixed(1)}.`,candle};
+ const trend=e9>e21?'bullish EMA trend':'bearish EMA trend';const momentum=rising?'latest candle rising':falling?'latest candle falling':'latest candle flat';return{side:null,reason:`WAIT · ${trend} · ${momentum} · RSI ${rv.toFixed(1)}.`,candle};}
 function equity(){let total=state.cash;for(const s of Object.keys(PRODUCTS)){const p=state.positions[s];if(p){const price=prices[s]||p.entry;total+=p.stake+unrealized(p,price);}}return total;}
 function unrealized(p,price){return p.stake*((p.side==='BUY'?(price-p.entry):(p.entry-price))/p.entry);}
 function openPosition(symbol,side,price,candle){let cfg;try{cfg=getSettings();}catch(e){addFeed(e.message,'bad');return;}if(state.positions[symbol]||Object.values(state.positions).filter(Boolean).length>=MAX_POSITIONS)return;if(state.cash<cfg.stake){addFeed(`${symbol}: not enough free cash for $${cfg.stake.toFixed(2)} stake.`,'bad');return;}const tp=side==='BUY'?price*(1+cfg.tp):price*(1-cfg.tp),sl=side==='BUY'?price*(1-cfg.sl):price*(1+cfg.sl);state.cash-=cfg.stake;state.positions[symbol]={side,entry:price,tp,sl,stake:cfg.stake,opened:Date.now()};lastEntryCandle[symbol]=candle;addFeed(`${symbol} ${side} OPEN · ${fmtPrice(price)} · stake ${money(cfg.stake)}`,'good');render();}
