@@ -42,7 +42,7 @@ td,th{padding:9px;border-bottom:1px solid #35415c}
 </select>
 <p>Market price: <b id="price">Loading...</b></p>
 <p>BUY stake: $1 | Maximum positions: 2</p>
-<p>Take profit: 0.80%</p>
+<p>Take profit: 2.80%</p>
 <button id="start">▶ START AUTO BUY</button>
 <button id="pause">Ⅱ PAUSE</button>
 <p id="status">Connecting to Coinbase...</p>
@@ -67,7 +67,7 @@ td,th{padding:9px;border-bottom:1px solid #35415c}
 <script>
 const API="https://api.exchange.coinbase.com";
 const COINS=["DOGE","SHIB","PEPE","BONK","FLOKI","WIF","TURBO","BRETT","MOG","NEIRO","POPCAT"];
-const START=20,STAKE=1,MAX=2,TP=0.008;
+const START=20,STAKE=1,MAX=2,TP=0.08;
 let cash=START,positions=[],history=[];
 let wins=0,losses=0,running=false,busy=false;
 let product="",price=0,timer=null,lastCandle=null;
