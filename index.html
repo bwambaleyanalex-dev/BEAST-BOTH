@@ -1,96 +1,229 @@
-<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>BEAST BOTH V5.1 — Paper Trading</title>
-<style>
-:root{--lime:#7cff00;--green:#00ff88;--red:#ff5148;--bg:#080808;--panel:#191919;--muted:#aaa}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:#fff;font-family:Arial,sans-serif;padding:12px;max-width:850px;margin:auto}
-h1{color:var(--lime);text-align:center;margin:5px 0;font-size:28px}.sub,.small{color:var(--muted);text-align:center;font-size:12px;line-height:1.5}
-.panel,.beast{background:var(--panel);border:2px solid var(--lime);border-radius:15px;padding:13px;margin:12px 0}.beast.pepe{border-color:var(--green)}
-.balance{text-align:center}.amount{font-size:38px;color:var(--lime);font-weight:bold;margin:5px}.stats,.grid,.settings{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin:10px 0}.stats div,.grid div,.settings label{background:#050505;border-radius:9px;padding:9px;min-width:0}.stats span,.grid span{display:block;color:var(--muted);font-size:11px;margin-bottom:5px}.stats b,.grid b{font-size:16px;overflow-wrap:anywhere}.beast h2{font-size:19px;margin:0 0 10px}.price{font-size:18px;color:var(--lime);font-weight:bold}.pepe .price{color:var(--green)}
-button{border:0;border-radius:10px;padding:13px;font-weight:bold;font-size:15px;cursor:pointer}.mainbtn{width:100%;background:var(--lime);color:#000;margin-top:8px}.stopbtn{background:#ffb000!important}.resetbtn{width:100%;background:#eee;color:#000;margin-top:10px}.settings label{font-size:11px;color:var(--muted)}input{width:100%;margin-top:6px;background:#222;color:#fff;border:1px solid #555;border-radius:6px;padding:9px;font-size:16px}
-.row{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px solid #333;font-size:13px}.good{color:var(--green)}.bad{color:var(--red)}.muted{color:var(--muted)}.tag{font-size:11px;padding:3px 6px;border-radius:5px;background:#292929}.feed{max-height:310px;overflow:auto}.notice{font-size:12px;color:#ddd;line-height:1.5;background:#101010;border-radius:9px;padding:10px;margin-top:10px}
-@media(max-width:430px){.stats,.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.settings{grid-template-columns:1fr 1fr}.amount{font-size:33px}}
-</style></head>
-<body>
-<h1>🤖 BEAST BOTH V5.1</h1>
-<p class="sub">COINBASE EXCHANGE MARKET DATA • PAPER TRADING ONLY • NO DERIV • NO MT5</p>
-<section class="panel balance">
- <div>MY VIRTUAL EQUITY</div><div class="amount">$<span id="equity">20.00</span></div>
- <div class="small">Starting $20.00 · Realized P/L: <b id="realized">$0.00</b> · Unrealized: <b id="unrealized">$0.00</b></div>
- <div class="stats"><div><span>WINS</span><b class="good" id="wins">0</b></div><div><span>LOSSES</span><b class="bad" id="losses">0</b></div><div><span>CLOSED TRADES</span><b id="tradeCount">0</b></div></div>
- <div class="small">Free cash: $<b id="cash">20.00</b> · Open positions: <b id="openCount">0</b>/2</div>
- <button id="autoButton" class="mainbtn" onclick="toggleAuto()">▶ START AUTO BEAST</button>
- <div class="small">Checks every 15 seconds while this page stays open.</div>
-</section>
-<section class="beast">
- <h2>🐶 DOGE BEAST — <span id="sigDOGE" class="muted">WAITING</span></h2>
- <div>Coinbase price: <b class="price" id="priceDOGE">—</b> <span id="changeDOGE" class="muted"></span></div>
- <div class="grid">
-  <div><span>POSITION</span><b id="positionDOGE">NONE</b></div><div><span>ENTRY</span><b id="entryDOGE">—</b></div><div><span>TAKE PROFIT</span><b id="tpDOGE" class="good">—</b></div>
-  <div><span>STOP LOSS</span><b id="slDOGE" class="bad">—</b></div><div><span>STAKE</span><b id="stakeDOGE">—</b></div><div><span>UNREALIZED P/L</span><b id="pnlDOGE">—</b></div>
- </div><div class="small" id="reasonDOGE">Waiting for candle data.</div>
-</section>
-<section class="beast pepe">
- <h2>🐸 PEPE BEAST — <span id="sigPEPE" class="muted">WAITING</span></h2>
- <div>Coinbase price: <b class="price" id="pricePEPE">—</b> <span id="changePEPE" class="muted"></span></div>
- <div class="grid">
-  <div><span>POSITION</span><b id="positionPEPE">NONE</b></div><div><span>ENTRY</span><b id="entryPEPE">—</b></div><div><span>TAKE PROFIT</span><b id="tpPEPE" class="good">—</b></div>
-  <div><span>STOP LOSS</span><b id="slPEPE" class="bad">—</b></div><div><span>STAKE</span><b id="stakePEPE">—</b></div><div><span>UNREALIZED P/L</span><b id="pnlPEPE">—</b></div>
- </div><div class="small" id="reasonPEPE">Waiting for candle data.</div>
-</section>
-<section class="panel">
- <h3 style="color:var(--lime);margin:0">TRADING SETTINGS</h3>
- <div class="settings">
-  <label>Fixed stake ($)<input id="stakeInput" type="number" min="1" max="20" step="1" value="5"></label>
-  <label>Take profit (%)<input id="tpInput" type="number" min="0.5" max="30" step="0.5" value="5"></label>
-  <label>Stop loss (%)<input id="slInput" type="number" min="0.5" max="20" step="0.5" value="3"></label>
- </div>
- <div class="small">Settings apply to new positions. Existing positions keep their original TP/SL.</div>
-</section>
-<section class="panel">
- <h3 style="color:var(--lime);margin:0 0 8px">📓 LIVE TRADE FEED</h3><div id="feed" class="feed"><div class="small">Press START AUTO BEAST to begin scanning.</div></div>
- <button class="resetbtn" onclick="resetAll()">RESET PAPER ACCOUNT TO $20</button>
-</section>
-<div class="notice"><b>How the signal works:</b> EMA 9/EMA 21 trend, RSI and recent candle momentum must agree. The bot does not force trades and may wait when conditions are unclear. A position closes only after a fetched market price reaches its TP or SL. Paper results exclude fees, spread, slippage and price movement between checks. Coinbase must provide DOGE-USD and PEPE-USD candle data in your browser. Keep this page open; browser background limits can delay checks.</div>
-<script>
-'use strict';
-const START_BALANCE=20, CHECK_MS=15000, MAX_POSITIONS=2;
-const PRODUCTS={DOGE:'DOGE-USD',PEPE:'PEPE-USD'};
-let state={cash:20,positions:{DOGE:null,PEPE:null},wins:0,losses:0,realized:0,feed:[]};
-let prices={DOGE:null,PEPE:null},signals={DOGE:null,PEPE:null},lastEntryCandle={DOGE:0,PEPE:0};
-let running=false,timer=null,busy=false;
-const $=id=>document.getElementById(id);
-function money(n){return (n<0?'-$':'$')+Math.abs(n).toFixed(2)}
-function fmtPrice(n){if(!Number.isFinite(n))return '—';return n>=1?n.toFixed(5):n>=0.001?n.toFixed(7):n.toFixed(10)}
-function addFeed(message,kind=''){state.feed.unshift({time:new Date().toLocaleTimeString(),message,kind});state.feed=state.feed.slice(0,80);renderFeed();save();}
-function save(){try{localStorage.setItem('beastBothV5',JSON.stringify(state));}catch(e){}}
-function load(){try{const raw=localStorage.getItem('beastBothV5');if(raw){const x=JSON.parse(raw);if(x&&Number.isFinite(x.cash)&&x.positions){state={...state,...x};}}}catch(e){}}
-function getSettings(){const stake=Number($('stakeInput').value),tp=Number($('tpInput').value),sl=Number($('slInput').value);if(!(stake>=1&&stake<=20&&tp>=0.5&&tp<=30&&sl>=0.5&&sl<=20))throw Error('Settings out of range.');return{stake,tp:tp/100,sl:sl/100};}
-function ema(values,period){const k=2/(period+1);let v=values[0];for(let i=1;i<values.length;i++)v=values[i]*k+v*(1-k);return v;}
-function rsi(values,period=14){if(values.length<=period)return 50;let gains=0,losses=0;for(let i=values.length-period;i<values.length;i++){const d=values[i]-values[i-1];if(d>0)gains+=d;else losses-=d;}if(losses===0)return 100;return 100-(100/(1+gains/losses));}
-async function fetchCandles(symbol){const product=PRODUCTS[symbol];const url=`https://api.exchange.coinbase.com/products/${product}/candles?granularity=60`;const response=await fetch(url,{headers:{'Accept':'application/json'}});if(!response.ok)throw Error(`${product}: Coinbase HTTP ${response.status}`);const raw=await response.json();if(!Array.isArray(raw)||raw.length<30)throw Error(`${product}: insufficient candle data`);return raw.map(c=>({time:Number(c[0]),low:Number(c[1]),high:Number(c[2]),open:Number(c[3]),close:Number(c[4]),volume:Number(c[5])})).sort((a,b)=>a.time-b.time);}
-function analyse(candles){const closed=candles.slice(0,-1);if(closed.length<25)return{side:null,reason:'Waiting for enough completed 1-minute candles.'};const closes=closed.map(c=>c.close);const e9=ema(closes.slice(-40),9),e21=ema(closes.slice(-60),21),rv=rsi(closes,14);const last=closes.at(-1),prev=closes.at(-2);const rising=last>prev,falling=last<prev;const candle=closed.at(-1).time;
- // One completed candle of momentum is enough; do not demand three consecutive candles.
- if(e9>e21&&last>e9&&rising&&rv>=50&&rv<=72)return{side:'BUY',reason:`BUY confirmed · EMA9 above EMA21 · latest candle rising · RSI ${rv.toFixed(1)}.`,candle};
- if(e9<e21&&last<e9&&falling&&rv>=28&&rv<=50)return{side:'SELL',reason:`SELL confirmed · EMA9 below EMA21 · latest candle falling · RSI ${rv.toFixed(1)}.`,candle};
- const trend=e9>e21?'bullish EMA trend':'bearish EMA trend';const momentum=rising?'latest candle rising':falling?'latest candle falling':'latest candle flat';return{side:null,reason:`WAIT · ${trend} · ${momentum} · RSI ${rv.toFixed(1)}.`,candle};}
-function equity(){let total=state.cash;for(const s of Object.keys(PRODUCTS)){const p=state.positions[s];if(p){const price=prices[s]||p.entry;total+=p.stake+unrealized(p,price);}}return total;}
-function unrealized(p,price){return p.stake*((p.side==='BUY'?(price-p.entry):(p.entry-price))/p.entry);}
-function openPosition(symbol,side,price,candle){let cfg;try{cfg=getSettings();}catch(e){addFeed(e.message,'bad');return;}if(state.positions[symbol]||Object.values(state.positions).filter(Boolean).length>=MAX_POSITIONS)return;if(state.cash<cfg.stake){addFeed(`${symbol}: not enough free cash for $${cfg.stake.toFixed(2)} stake.`,'bad');return;}const tp=side==='BUY'?price*(1+cfg.tp):price*(1-cfg.tp),sl=side==='BUY'?price*(1-cfg.sl):price*(1+cfg.sl);state.cash-=cfg.stake;state.positions[symbol]={side,entry:price,tp,sl,stake:cfg.stake,opened:Date.now()};lastEntryCandle[symbol]=candle;addFeed(`${symbol} ${side} OPEN · ${fmtPrice(price)} · stake ${money(cfg.stake)}`,'good');render();}
-function closePosition(symbol,price,why){const p=state.positions[symbol];if(!p)return;const pnl=unrealized(p,price);state.cash+=p.stake+pnl;state.realized+=pnl;if(pnl>=0)state.wins++;else state.losses++;state.positions[symbol]=null;addFeed(`${symbol} ${p.side} ${why} · ${money(pnl)} · exit ${fmtPrice(price)}`,pnl>=0?'good':'bad');render();}
-function managePosition(symbol,price){const p=state.positions[symbol];if(!p)return;if(p.side==='BUY'){if(price>=p.tp)closePosition(symbol,price,'TAKE PROFIT');else if(price<=p.sl)closePosition(symbol,price,'STOP LOSS');}else{if(price<=p.tp)closePosition(symbol,price,'TAKE PROFIT');else if(price>=p.sl)closePosition(symbol,price,'STOP LOSS');}}
-function render(){let unreal=0;for(const s of Object.keys(PRODUCTS)){const p=state.positions[s],price=prices[s];if(p&&price)unreal+=unrealized(p,price);$('price'+s).textContent=price?('$'+fmtPrice(price)):'—';$('position'+s).textContent=p?p.side:'NONE';$('entry'+s).textContent=p?fmtPrice(p.entry):'—';$('tp'+s).textContent=p?fmtPrice(p.tp):'—';$('sl'+s).textContent=p?fmtPrice(p.sl):'—';$('stake'+s).textContent=p?money(p.stake):'—';const pl=p&&price?unrealized(p,price):null;$('pnl'+s).textContent=pl===null?'—':money(pl);$('pnl'+s).className=pl===null?'':pl>=0?'good':'bad';$('sig'+s).textContent=signals[s]?.side||'WAIT';$('reason'+s).textContent=signals[s]?.reason||'Waiting for candle data.';}
- $('cash').textContent=state.cash.toFixed(2);$('unrealized').textContent=money(unreal);$('realized').textContent=money(state.realized);$('equity').textContent=equity().toFixed(2);$('wins').textContent=state.wins;$('losses').textContent=state.losses;$('tradeCount').textContent=state.wins+state.losses;$('openCount').textContent=Object.values(state.positions).filter(Boolean).length;renderFeed();save();}
-function renderFeed(){const f=$('feed');f.innerHTML='';if(!state.feed.length){f.innerHTML='<div class="small">No trades yet.</div>';return;}for(const item of state.feed){const d=document.createElement('div');d.className='row';const a=document.createElement('span'),b=document.createElement('span');a.textContent=item.time+' '+item.message;b.textContent=item.kind==='good'?'●':item.kind==='bad'?'●':'';b.className=item.kind;d.append(a,b);f.appendChild(d);}}
-async function scan(){if(busy)return;busy=true;try{for(const symbol of Object.keys(PRODUCTS)){try{const candles=await fetchCandles(symbol);const current=candles.at(-1).close;prices[symbol]=current;const sig=analyse(candles);signals[symbol]=sig;managePosition(symbol,current);if(!state.positions[symbol]&&sig.side&&sig.candle&&sig.candle!==lastEntryCandle[symbol]&&Object.values(state.positions).filter(Boolean).length<MAX_POSITIONS){openPosition(symbol,sig.side,current,sig.candle);} }catch(err){signals[symbol]={side:null,reason:err.message};}}
- render();if(equity()<=0){stopAuto();addFeed('Account equity reached $0. Auto trading stopped.','bad');}}
- finally{busy=false;}}
-function toggleAuto(){if(running)stopAuto();else startAuto();}
-function startAuto(){running=true;$('autoButton').textContent='⏸ PAUSE AUTO BEAST';$('autoButton').classList.add('stopbtn');addFeed('AUTO BEAST STARTED · Coinbase candle signals','');scan();timer=setInterval(scan,CHECK_MS);}
-function stopAuto(){running=false;if(timer)clearInterval(timer);timer=null;$('autoButton').textContent='▶ START AUTO BEAST';$('autoButton').classList.remove('stopbtn');}
-function resetAll(){stopAuto();state={cash:START_BALANCE,positions:{DOGE:null,PEPE:null},wins:0,losses:0,realized:0,feed:[]};prices={DOGE:null,PEPE:null};signals={DOGE:null,PEPE:null};lastEntryCandle={DOGE:0,PEPE:0};addFeed('Paper account reset to $20.00.');render();}
-load();render();
-</script>
-</body></html>
+
+import time
+import requests
+from datetime import datetime
+
+# ==========================================
+# 🤖 BEAST BOTH V6 - BUY ONLY
+# COINBASE MARKET DATA
+# PAPER TRADING ONLY
+# ==========================================
+
+STARTING_BALANCE = 20.00
+STAKE = 1.00
+MAX_POSITIONS = 2
+
+TAKE_PROFIT_PERCENT = 0.80
+STOP_LOSS_PERCENT = 1.50
+
+CHECK_SECONDS = 15
+PRODUCT = "BTC-USD"
+
+balance = STARTING_BALANCE
+positions = []
+closed_trades = []
+wins = 0
+losses = 0
+running = True
+
+BASE_URL = "https://api.exchange.coinbase.com"
+
+
+def get_price():
+    url = f"{BASE_URL}/products/{PRODUCT}/ticker"
+    response = requests.get(url, timeout=10)
+    response.raise_for_status()
+    return float(response.json()["price"])
+
+
+def get_candles():
+    url = f"{BASE_URL}/products/{PRODUCT}/candles"
+    params = {
+        "granularity": 300
+    }
+
+    response = requests.get(
+        url, params=params, timeout=10
+    )
+    response.raise_for_status()
+
+    data = response.json()
+    return sorted(data, key=lambda x: x[0])
+
+
+def buy_signal():
+    candles = get_candles()
+
+    if len(candles) < 30:
+        return False
+
+    closes = [float(c[4]) for c in candles]
+
+    ema9 = sum(closes[-9:]) / 9
+    ema21 = sum(closes[-21:]) / 21
+
+    previous = closes[-2]
+    current = closes[-1]
+
+    # BUY ONLY - no sell-entry signals
+    bullish = (
+        ema9 > ema21
+        and current > ema9
+        and current > previous
+    )
+
+    return bullish
+
+
+def open_buy(price):
+    global balance
+
+    if len(positions) >= MAX_POSITIONS:
+        return
+
+    if balance < STAKE:
+        return
+
+    balance -= STAKE
+
+    quantity = STAKE / price
+
+    target = price * (
+        1 + TAKE_PROFIT_PERCENT / 100
+    )
+
+    stop = price * (
+        1 - STOP_LOSS_PERCENT / 100
+    )
+
+    positions.append({
+        "entry": price,
+        "quantity": quantity,
+        "stake": STAKE,
+        "target": target,
+        "stop": stop,
+        "time": datetime.now().strftime("%H:%M:%S")
+    })
+
+    print("\n🟢 BUY POSITION OPENED")
+    print(f"Entry: ${price:.2f}")
+    print(f"Take profit: ${target:.2f}")
+    print(f"Stop loss: ${stop:.2f}")
+
+
+def close_position(index, price, reason):
+    global balance, wins, losses
+
+    position = positions.pop(index)
+
+    proceeds = position["quantity"] * price
+    profit = proceeds - position["stake"]
+
+    balance += proceeds
+
+    if profit > 0:
+        wins += 1
+    else:
+        losses += 1
+
+    closed_trades.append({
+        "profit": profit,
+        "reason": reason,
+        "price": price
+    })
+
+    print("\n🔴 BUY POSITION CLOSED")
+    print(f"Reason: {reason}")
+    print(f"Exit: ${price:.2f}")
+    print(f"Profit: ${profit:.4f}")
+    print(f"Virtual balance: ${balance:.4f}")
+
+
+def manage_positions(price):
+    for index in range(len(positions) - 1, -1, -1):
+
+        position = positions[index]
+
+        if price >= position["target"]:
+            close_position(
+                index, price, "TAKE PROFIT"
+            )
+
+        elif price <= position["stop"]:
+            close_position(
+                index, price, "STOP LOSS"
+            )
+
+
+def dashboard(price):
+    unrealized = sum(
+        p["quantity"] * price - p["stake"]
+        for p in positions
+    )
+
+    equity = balance + sum(
+        p["quantity"] * price
+        for p in positions
+    )
+
+    print("\n" + "=" * 48)
+    print("🤖 BEAST BOTH V6 - BUY ONLY")
+    print("COINBASE DATA | PAPER TRADING")
+    print("=" * 48)
+
+    print(f"💰 Virtual balance: ${balance:.4f}")
+    print(f"📊 Total equity: ${equity:.4f}")
+    print(f"📈 Realized P/L: ${balance - STARTING_BALANCE:.4f}")
+    print(f"📉 Unrealized P/L: ${unrealized:.4f}")
+    print(f"🟢 Wins: {wins} | 🔴 Losses: {losses}")
+    print(f"📦 Closed trades: {len(closed_trades)}")
+    print(f"📂 Open positions: {len(positions)}/{MAX_POSITIONS}")
+    print(f"💵 {PRODUCT}: ${price:.2f}")
+
+    for i, p in enumerate(positions, 1):
+        print(
+            f"BUY {i}: Entry ${p['entry']:.2f} | "
+            f"TP ${p['target']:.2f} | "
+            f"SL ${p['stop']:.2f}"
+        )
+
+    print("=" * 48)
+
+
+def run():
+    global running
+
+    print("🚀 BEAST BOTH V6 STARTED")
+    print("BUY ONLY MODE")
+    print("SELL ONLY AT TP OR PROTECTIVE STOP")
+    print("PAPER TRADING ONLY")
+
+    while running:
+        try:
+            price = get_price()
+
+            # First manage existing BUY positions
+            manage_positions(price)
+
+            # Then search for new BUY opportunities
+            if len(positions) < MAX_POSITIONS:
+                if buy_signal():
+                    open_buy(price)
+                else:
+                    print("⏳ Waiting for BUY opportunity...")
+
+            dashboard(price)
+
+            time.sleep(CHECK_SECONDS)
+
+        except KeyboardInterrupt:
+            print("\n🛑 BOT STOPPED")
+            break
+
+        except Exception as error:
+            print(f"⚠️ Error: {error}")
+            time.sleep(CHECK_SECONDS)
+
+
+if __name__ == "__main__":
+    run()
