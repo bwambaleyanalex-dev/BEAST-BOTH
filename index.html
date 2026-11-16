@@ -1,191 +1,265 @@
-<!doctype html>
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>BEAST BOTH V6 — BUY ONLY</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BEAST BOTH V6 MEME COINS</title>
 <style>
-:root{color-scheme:dark;--bg:#0b1020;--panel:#151d32;--muted:#9eabc5;--line:#293653;--green:#27d695;--red:#ff6b78;--blue:#79aaff}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:#f3f6ff;font:15px system-ui,Arial,sans-serif}
-main{max-width:850px;margin:auto;padding:18px}
-header{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:16px}
-h1{font-size:22px;margin:0} .sub{color:var(--muted);font-size:12px;margin-top:4px}
-.pill{border:1px solid var(--line);border-radius:99px;padding:7px 12px;color:var(--green);font-size:12px}
-.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-.panel,.metric{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px}
-.metric small{display:block;color:var(--muted);font-size:12px}.metric strong{display:block;font-size:22px;margin-top:5px;overflow-wrap:anywhere}
-h2{font-size:16px;margin:0 0 12px}
-section{margin-top:12px}.controls{display:flex;gap:9px;flex-wrap:wrap}
-button{border:0;border-radius:10px;padding:12px 16px;font-weight:700;font-size:14px;cursor:pointer}
-#start{background:var(--green);color:#062016}#pause{background:#34415e;color:white}
-button:disabled{opacity:.45;cursor:not-allowed}
-table{width:100%;border-collapse:collapse;font-size:13px}td,th{text-align:left;padding:9px 5px;border-bottom:1px solid var(--line)}th{color:var(--muted);font-weight:600}
-.muted{color:var(--muted)}.green{color:var(--green)}.red{color:var(--red)}
-#status{margin-top:12px;padding:10px 12px;border-radius:10px;background:#10182a;color:var(--muted);font-size:13px;overflow-wrap:anywhere}
-.note{font-size:12px;color:var(--muted);line-height:1.5}
-@media(max-width:520px){main{padding:12px}.grid{gap:8px}.metric{padding:11px}.metric strong{font-size:19px}h1{font-size:19px}table{font-size:12px}}
+body{margin:0;background:#0b1020;color:white;font-family:Arial;padding:15px}
+.card{background:#18233a;padding:15px;margin:10px 0;border-radius:12px}
+h2{color:#29dc9b}
+button,select{padding:13px;border:0;border-radius:8px;margin:5px;font-weight:bold}
+button{background:#25d69a;color:#061b13}
+#pause{background:#46516b;color:white}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+small{color:#aab7ce}
+.big{font-size:22px;font-weight:bold;margin-top:7px}
+table{width:100%;font-size:12px;text-align:left}
+td,th{padding:9px;border-bottom:1px solid #35415c}
+.green{color:#29dc9b}.red{color:#ff6878}
 </style>
 </head>
 <body>
-<main>
-<header>
- <div><h1>🤖 BEAST BOTH V6 — BUY ONLY</h1><div class="sub">COINBASE MARKET DATA · PAPER TRADING ONLY · NO DERIVATIVES · NO MT5</div></div>
- <div class="pill" id="state">PAUSED</div>
-</header>
+<h2>🤖 BEAST BOTH V6 — MEME COINS</h2>
+<small>COINBASE DATA | PAPER TRADING ONLY | BUY ONLY</small>
 
+<div class="card">
 <div class="grid">
- <div class="metric"><small>VIRTUAL EQUITY</small><strong id="equity">$20.00</strong></div>
- <div class="metric"><small>FREE CASH</small><strong id="cash">$20.00</strong></div>
- <div class="metric"><small>REALIZED P/L</small><strong id="realized">$0.00</strong></div>
- <div class="metric"><small>UNREALIZED P/L</small><strong id="unrealized">$0.00</strong></div>
- <div class="metric"><small>WINS</small><strong id="wins">0</strong></div>
- <div class="metric"><small>LOSSES</small><strong id="losses">0</strong></div>
+<div><small>VIRTUAL EQUITY</small><div class="big" id="equity">$20.00</div></div>
+<div><small>FREE CASH</small><div class="big" id="cash">$20.00</div></div>
+<div><small>REALIZED PROFIT</small><div class="big" id="profit">$0.00</div></div>
+<div><small>UNREALIZED P/L</small><div class="big" id="unreal">$0.00</div></div>
+<div><small>WINS</small><div class="big" id="wins">0</div></div>
+<div><small>LOSSES</small><div class="big" id="losses">0</div></div>
+</div>
 </div>
 
-<section class="panel">
- <h2>Market and bot settings</h2>
- <div class="grid">
-  <div><small class="muted">PAIR</small><strong>BTC-USD</strong></div>
-  <div><small class="muted">LIVE MARKET PRICE</small><strong id="price">Loading…</strong></div>
-  <div><small class="muted">BUY STAKE</small><strong>$1.00</strong></div>
-  <div><small class="muted">TAKE PROFIT</small><strong>0.80%</strong></div>
-  <div><small class="muted">MAX OPEN BUYS</small><strong>2</strong></div>
-  <div><small class="muted">MARKET CHECK</small><strong>15 seconds</strong></div>
- </div>
- <div class="controls" style="margin-top:14px">
-  <button id="start">▶ START AUTO BUY</button>
-  <button id="pause" disabled>Ⅱ PAUSE</button>
- </div>
- <div id="status">Connecting to Coinbase public market data…</div>
-</section>
+<div class="card">
+<h3>MEME COIN SELECTION</h3>
+<select id="pair" style="width:100%">
+<option>Loading coins...</option>
+</select>
+<p>Market price: <b id="price">Loading...</b></p>
+<p>BUY stake: $1 | Maximum positions: 2</p>
+<p>Take profit: 0.80%</p>
+<button id="start">▶ START AUTO BUY</button>
+<button id="pause">Ⅱ PAUSE</button>
+<p id="status">Connecting to Coinbase...</p>
+</div>
 
-<section class="panel">
- <h2>Open BUY positions</h2>
- <div style="overflow-x:auto"><table><thead><tr><th>#</th><th>Entry</th><th>Take profit</th><th>Current P/L</th></tr></thead><tbody id="openRows"><tr><td colspan="4" class="muted">No open positions</td></tr></tbody></table></div>
-</section>
-<section class="panel">
- <h2>Recent closed trades</h2>
- <div style="overflow-x:auto"><table><thead><tr><th>Time</th><th>Exit reason</th><th>Exit price</th><th>P/L</th></tr></thead><tbody id="closedRows"><tr><td colspan="4" class="muted">No closed trades yet</td></tr></tbody></table></div>
-</section>
-<p class="note">This page simulates trades only. It never sends orders to Coinbase. BUY entries use a simple 5-minute EMA trend filter. Positions close only when the take-profit price is reached; there is no stop-loss in this version. Results are gross estimates and do not subtract fees, spread or slippage. Keep this page open while the bot runs. Refreshing the page resets the paper account.</p>
-</main>
+<div class="card">
+<h3>OPEN BUY POSITIONS</h3>
+<table>
+<thead><tr><th>Entry</th><th>Target</th><th>P/L</th></tr></thead>
+<tbody id="opens"><tr><td colspan="3">No positions</td></tr></tbody>
+</table>
+</div>
+
+<div class="card">
+<h3>CLOSED TRADES</h3>
+<table>
+<thead><tr><th>Exit</th><th>Result</th><th>Profit</th></tr></thead>
+<tbody id="history"></tbody>
+</table>
+</div>
+
 <script>
-(() => {
- const STARTING_BALANCE=20, STAKE=1, MAX_POSITIONS=2;
- const TP=0.008, CHECK_MS=15000, PRODUCT='BTC-USD';
- const API='https://api.exchange.coinbase.com';
- let cash=STARTING_BALANCE, positions=[], closed=[], wins=0, losses=0;
- let running=false, timer=null, lastEntryCandle=null, busy=false, latestPrice=null;
+const API="https://api.exchange.coinbase.com";
+const COINS=["DOGE","SHIB","PEPE","BONK","FLOKI","WIF","TURBO","BRETT","MOG","NEIRO","POPCAT"];
+const START=20,STAKE=1,MAX=2,TP=0.008;
+let cash=START,positions=[],history=[];
+let wins=0,losses=0,running=false,busy=false;
+let product="",price=0,timer=null,lastCandle=null;
 
- const el=id=>document.getElementById(id);
- const money=n=>'$'+Number(n).toFixed(4);
- const shortMoney=n=>'$'+Number(n).toFixed(2);
- async function getJSON(url){
-   const r=await fetch(url,{cache:'no-store'});
-   if(!r.ok) throw new Error('Coinbase returned HTTP '+r.status);
-   return r.json();
+const $=id=>document.getElementById(id);
+const fmt=n=>"$"+Number(n).toFixed(4);
+const short=n=>"$"+Number(n).toFixed(2);
+
+async function api(path){
+ const r=await fetch(API+path,{cache:"no-store"});
+ if(!r.ok)throw Error("Coinbase HTTP "+r.status);
+ return r.json();
+}
+
+async function loadCoins(){
+ try{
+  const list=await api("/products");
+  const available=list.filter(p=>
+   p.quote_currency==="USD" &&
+   p.status==="online" &&
+   p.trading_disabled!==true
+  ).map(p=>p.id);
+
+  const choices=COINS.map(c=>c+"-USD")
+   .filter(c=>available.includes(c));
+
+  $("pair").innerHTML="";
+  choices.forEach(c=>{
+   const o=document.createElement("option");
+   o.value=c;o.textContent=c;
+   $("pair").appendChild(o);
+  });
+
+  if(!choices.length){
+   $("status").textContent="No supported meme coin USD pairs found on Coinbase.";
+   return;
+  }
+
+  product=choices[0];
+  $("pair").value=product;
+  $("status").textContent="Meme coins loaded. Select one coin.";
+  await tick();
+ }catch(e){
+  $("status").textContent="Coinbase connection error: "+e.message;
  }
- async function getPrice(){
-   const j=await getJSON(`${API}/products/${PRODUCT}/ticker`);
-   const p=Number(j.price);
-   if(!Number.isFinite(p)||p<=0) throw new Error('Invalid Coinbase price');
-   return p;
+}
+
+$("pair").onchange=()=>{
+ if(running||positions.length){
+  $("pair").value=product;
+  $("status").textContent="Pause and close positions before changing coin.";
+  return;
  }
- async function getSignal(){
-   const raw=await getJSON(`${API}/products/${PRODUCT}/candles?granularity=300`);
-   const candles=raw.sort((a,b)=>a[0]-b[0]);
-   // Ignore the newest still-forming 5-minute candle.
-   const closedCandles=candles.filter(c=>Date.now()/1000 >= Number(c[0])+300);
-   if(closedCandles.length<22) return {buy:false,candle:null,why:'Waiting for enough closed 5-minute candles'};
-   const closes=closedCandles.map(c=>Number(c[4]));
-   const ema9=closes.slice(-9).reduce((a,b)=>a+b,0)/9;
-   const ema21=closes.slice(-21).reduce((a,b)=>a+b,0)/21;
-   const current=closes[closes.length-1], previous=closes[closes.length-2];
-   return {
-     buy:ema9>ema21 && current>ema9 && current>previous,
-     candle:closedCandles[closedCandles.length-1][0],
-     why:ema9>ema21 && current>ema9 && current>previous?'BUY setup confirmed':'No BUY setup'
-   };
+ product=$("pair").value;
+ lastCandle=null;
+ tick();
+};
+
+async function getPrice(){
+ const t=await api("/products/"+product+"/ticker");
+ return Number(t.price);
+}
+
+async function signal(){
+ const data=await api("/products/"+product+"/candles?granularity=300");
+ const candles=data.sort((a,b)=>a[0]-b[0])
+ .filter(c=>Date.now()/1000>=Number(c[0])+300);
+
+ if(candles.length<22)return {buy:false};
+
+ const closes=candles.map(c=>Number(c[4]));
+ const ema9=closes.slice(-9).reduce((a,b)=>a+b,0)/9;
+ const ema21=closes.slice(-21).reduce((a,b)=>a+b,0)/21;
+ const current=closes.at(-1);
+ const previous=closes.at(-2);
+
+ return {
+  buy:ema9>ema21&&current>ema9&&current>previous,
+  candle:candles.at(-1)[0]
+ };
+}
+
+function buy(p,candle){
+ if(positions.length>=MAX||cash<STAKE)return;
+
+ cash-=STAKE;
+ positions.push({
+  entry:p,
+  qty:STAKE/p,
+  target:p*(1+TP),
+  stake:STAKE
+ });
+
+ lastCandle=candle;
+ $("status").textContent="🟢 BUY opened at "+short(p);
+ render();
+}
+
+function sell(i,p){
+ const pos=positions[i];
+ const proceeds=pos.qty*p;
+ const gain=proceeds-pos.stake;
+
+ cash+=proceeds;
+ wins++;
+ history.unshift({
+  price:p,
+  gain:gain,
+  reason:"TAKE PROFIT"
+ });
+ history=history.slice(0,20);
+ positions.splice(i,1);
+
+ $("status").textContent="✅ TAKE PROFIT HIT — BUY CLOSED. Profit "+fmt(gain);
+}
+
+function manage(p){
+ for(let i=positions.length-1;i>=0;i--){
+  if(p>=positions[i].target){
+   sell(i,p);
+  }
  }
- function openBuy(price,candle){
-   if(positions.length>=MAX_POSITIONS || cash<STAKE) return;
-   cash-=STAKE;
-   positions.push({entry:price,qty:STAKE/price,stake:STAKE,target:price*(1+TP),opened:new Date().toLocaleTimeString()});
-   lastEntryCandle=candle;
-   render();
-   setStatus('🟢 BUY opened at '+shortMoney(price)+'. Take-profit: '+shortMoney(price*(1+TP))+'.');
- }
- function closeAtTarget(i,price){
-   const p=positions[i], proceeds=p.qty*price, profit=proceeds-p.stake;
-   cash+=proceeds;
-   if(profit>=0) wins++; else losses++;
-   closed.unshift({time:new Date().toLocaleTimeString(),reason:'TAKE PROFIT',price,profit});
-   closed=closed.slice(0,20);
-   positions.splice(i,1);
-   setStatus('✅ TAKE PROFIT hit. BUY position sold in paper trading. Gross P/L: '+money(profit));
- }
- function manage(price){
-   for(let i=positions.length-1;i>=0;i--){
-     if(price>=positions[i].target) closeAtTarget(i,price);
+}
+
+function render(){
+ const invested=positions.reduce((s,p)=>s+p.stake,0);
+ const equity=cash+positions.reduce((s,p)=>s+p.qty*price,0);
+ const unreal=positions.reduce((s,p)=>s+p.qty*price-p.stake,0);
+
+ $("equity").textContent=short(equity);
+ $("cash").textContent=short(cash);
+ $("profit").textContent=short(cash+invested-START);
+ $("unreal").textContent=fmt(unreal);
+ $("wins").textContent=wins;
+ $("losses").textContent=losses;
+ $("price").textContent=price?short(price):"Loading";
+
+ $("opens").innerHTML=positions.map(p=>{
+  const pl=p.qty*price-p.stake;
+  return `<tr><td>${short(p.entry)}</td>
+  <td>${short(p.target)}</td>
+  <td class="${pl>=0?'green':'red'}">${fmt(pl)}</td></tr>`;
+ }).join("")||'<tr><td colspan="3">No open positions</td></tr>';
+
+ $("history").innerHTML=history.map(h=>
+  `<tr><td>${short(h.price)}</td><td>${h.reason}</td>
+  <td class="green">${fmt(h.gain)}</td></tr>`
+ ).join("");
+}
+
+async function tick(){
+ if(busy||!product)return;
+ busy=true;
+ try{
+  price=await getPrice();
+  manage(price);
+
+  if(running&&positions.length<MAX&&cash>=STAKE){
+   const s=await signal();
+   if(s.buy&&s.candle!==lastCandle){
+    buy(price,s.candle);
+   }else{
+    $("status").textContent=s.buy?
+    "BUY candle already used. Waiting for next candle.":
+    "Waiting for BUY opportunity...";
    }
+  }
+  render();
+ }catch(e){
+  $("status").textContent="Market error: "+e.message;
+ }finally{
+  busy=false;
  }
- function render(){
-   const unreal=positions.reduce((s,p)=>s+(p.qty*(latestPrice||p.entry)-p.stake),0);
-   const equity=cash+positions.reduce((s,p)=>s+p.qty*(latestPrice||p.entry),0);
-   el('equity').textContent=shortMoney(equity);
-   el('cash').textContent=shortMoney(cash);
-   el('realized').textContent=shortMoney(cash+positions.reduce((s,p)=>s+p.stake,0)-STARTING_BALANCE);
-   el('unrealized').textContent=money(unreal);
-   el('wins').textContent=wins; el('losses').textContent=losses;
-   el('price').textContent=latestPrice?shortMoney(latestPrice):'Loading…';
-   el('openRows').innerHTML=positions.length?positions.map((p,i)=>{
-     const pl=p.qty*(latestPrice||p.entry)-p.stake;
-     return `<tr><td>${i+1}</td><td>${shortMoney(p.entry)}</td><td>${shortMoney(p.target)}</td><td class="${pl>=0?'green':'red'}">${money(pl)}</td></tr>`;
-   }).join(''):'<tr><td colspan="4" class="muted">No open positions</td></tr>';
-   el('closedRows').innerHTML=closed.length?closed.map(t=>`<tr><td>${t.time}</td><td>${t.reason}</td><td>${shortMoney(t.price)}</td><td class="${t.profit>=0?'green':'red'}">${money(t.profit)}</td></tr>`).join(''):'<tr><td colspan="4" class="muted">No closed trades yet</td></tr>';
-   el('state').textContent=running?'● RUNNING':'PAUSED';
-   el('state').style.color=running?'var(--green)':'var(--muted)';
-   el('start').disabled=running; el('pause').disabled=!running;
- }
- function setStatus(s){el('status').textContent=s}
- async function tick(){
-   if(busy) return; busy=true;
-   try{
-     const price=await getPrice(); latestPrice=price;
-     manage(price);
-     if(running && positions.length<MAX_POSITIONS && cash>=STAKE){
-       const signal=await getSignal();
-       if(signal.buy && signal.candle!==lastEntryCandle){
-         openBuy(price,signal.candle);
-       } else if(!signal.buy){
-         setStatus('⏳ '+signal.why+' · Checking again in 15 seconds.');
-       } else {
-         setStatus('BUY setup already used for this 5-minute candle. Waiting for the next candle.');
-       }
-     } else if(running){
-       setStatus(positions.length>=MAX_POSITIONS?'Maximum open BUY positions reached. Managing take-profit targets.':'Not enough free cash for another BUY.');
-     } else {
-       setStatus('Market data connected. Bot is paused.');
-     }
-     render();
-   }catch(e){
-     setStatus('⚠️ Market data error: '+e.message+'. Retrying in 15 seconds.');
-   }finally{busy=false}
- }
- function start(){
-   if(running)return;
-   running=true; render(); tick();
-   timer=setInterval(tick,CHECK_MS);
- }
- function pause(){
-   running=false;
-   if(timer){clearInterval(timer);timer=null}
-   render(); setStatus('Bot paused. Existing paper BUY positions remain open and their take-profit targets are still checked when you resume.');
- }
- el('start').addEventListener('click',start);
- el('pause').addEventListener('click',pause);
- render(); tick();
-})();
+}
+
+$("start").onclick=()=>{
+ if(running||!product)return;
+ running=true;
+ $("status").textContent="AUTO BUY STARTED";
+ tick();
+ timer=setInterval(tick,15000);
+};
+
+$("pause").onclick=()=>{
+ running=false;
+ clearInterval(timer);
+ timer=null;
+ $("status").textContent="BOT PAUSED";
+};
+
+render();
+loadCoins();
 </script>
 </body>
 </html>
