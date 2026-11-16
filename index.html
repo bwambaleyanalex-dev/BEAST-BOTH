@@ -1,343 +1,95 @@
-
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BEAST BOTH V4</title>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BEAST BOTH V5 — Paper Trading</title>
 <style>
-*{box-sizing:border-box}
-body{margin:0;background:#080d0b;color:#eaffef;font-family:Arial,sans-serif;padding:14px}
-header{text-align:center;margin-bottom:18px}
-h1{color:#39ff88;font-size:25px;margin:8px}
-.sub{color:#9bb5a3;font-size:12px}
-.panel,.coin{background:#101a14;border:1px solid #254b32;border-radius:13px;padding:15px;margin:12px 0}
-h2{font-size:15px;color:#55ff98;margin:0 0 12px}
-.big{font-size:28px;font-weight:bold;color:#42ff91}
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
-.stat{background:#17251b;padding:10px 5px;border-radius:8px;text-align:center;font-size:12px}
-.stat b{display:block;font-size:17px;margin-top:5px}
-button{width:100%;padding:14px;border:0;border-radius:9px;font-weight:bold;font-size:15px;margin:5px 0;cursor:pointer}
-.start{background:#28ed7b;color:#06170c}
-.stop{background:#ffb52e;color:#211500}
-.reset{background:#572727;color:white}
-.coin h2{font-size:17px}
-.price{font-size:22px;color:#4aff9a;font-weight:bold;margin:10px 0}
-.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
-.cell{background:#19271d;padding:9px 5px;border-radius:7px;font-size:11px;color:#9bb5a3}
-.cell b{display:block;color:white;font-size:13px;margin-top:5px;overflow-wrap:anywhere}
-.status{font-size:13px;color:#b9d3c1;margin:8px 0}
-.good{color:#48ff91}
-.bad{color:#ff7272}
-.feed{font-size:12px;line-height:1.8;max-height:220px;overflow:auto;color:#c3d8c9}
-.small{font-size:11px;color:#91a99a;line-height:1.6}
-</style>
-</head>
+:root{--lime:#7cff00;--green:#00ff88;--red:#ff5148;--bg:#080808;--panel:#191919;--muted:#aaa}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:#fff;font-family:Arial,sans-serif;padding:12px;max-width:850px;margin:auto}
+h1{color:var(--lime);text-align:center;margin:5px 0;font-size:28px}.sub,.small{color:var(--muted);text-align:center;font-size:12px;line-height:1.5}
+.panel,.beast{background:var(--panel);border:2px solid var(--lime);border-radius:15px;padding:13px;margin:12px 0}.beast.pepe{border-color:var(--green)}
+.balance{text-align:center}.amount{font-size:38px;color:var(--lime);font-weight:bold;margin:5px}.stats,.grid,.settings{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin:10px 0}.stats div,.grid div,.settings label{background:#050505;border-radius:9px;padding:9px;min-width:0}.stats span,.grid span{display:block;color:var(--muted);font-size:11px;margin-bottom:5px}.stats b,.grid b{font-size:16px;overflow-wrap:anywhere}.beast h2{font-size:19px;margin:0 0 10px}.price{font-size:18px;color:var(--lime);font-weight:bold}.pepe .price{color:var(--green)}
+button{border:0;border-radius:10px;padding:13px;font-weight:bold;font-size:15px;cursor:pointer}.mainbtn{width:100%;background:var(--lime);color:#000;margin-top:8px}.stopbtn{background:#ffb000!important}.resetbtn{width:100%;background:#eee;color:#000;margin-top:10px}.settings label{font-size:11px;color:var(--muted)}input{width:100%;margin-top:6px;background:#222;color:#fff;border:1px solid #555;border-radius:6px;padding:9px;font-size:16px}
+.row{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px solid #333;font-size:13px}.good{color:var(--green)}.bad{color:var(--red)}.muted{color:var(--muted)}.tag{font-size:11px;padding:3px 6px;border-radius:5px;background:#292929}.feed{max-height:310px;overflow:auto}.notice{font-size:12px;color:#ddd;line-height:1.5;background:#101010;border-radius:9px;padding:10px;margin-top:10px}
+@media(max-width:430px){.stats,.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.settings{grid-template-columns:1fr 1fr}.amount{font-size:33px}}
+</style></head>
 <body>
-<header>
-<h1>🤖 BEAST BOTH V4</h1>
-<div class="sub">COINBASE MARKET DATA • PAPER TRADING • NO DERIV • NO MT5</div>
-</header>
-
-<div class="panel">
-<h2>MY VIRTUAL BALANCE</h2>
-<div class="big" id="balance">$20.0000</div>
-<div class="small" id="summary">Started $20.0000 | Profit: $0.0000</div>
-<div class="stats">
-<div class="stat">WINS<b id="wins">0</b></div>
-<div class="stat">LOSSES<b id="losses">0</b></div>
-<div class="stat">TRADES<b id="trades">0</b></div>
-</div>
-<div class="status">Open positions: <b id="openCount">0/2</b></div>
-<button class="start" id="autoBtn" onclick="toggleAuto()">▶️ START AUTO BEAST</button>
-<div class="small">Market checks every 15 seconds • Fixed $1 stake</div>
-</div>
-
-<div class="panel">
-<h2>COINBASE MARKET CONNECTION</h2>
-<div id="connection" class="status">Connecting...</div>
-<div class="small" id="lastUpdate">Waiting for market prices...</div>
-</div>
-
-<div class="coin">
-<h2>🐶 DOGE BEAST</h2>
-<div class="price" id="dogePrice">Loading...</div>
-<div class="status" id="dogeStatus">Waiting for price</div>
-<div class="grid">
-<div class="cell">ENTRY<b id="dogeEntry">-</b></div>
-<div class="cell">TAKE PROFIT<b id="dogeTP">-</b></div>
-<div class="cell">STOP LOSS<b id="dogeSL">-</b></div>
-<div class="cell">STAKE<b>$1.00</b></div>
-<div class="cell">LAST RESULT<b id="dogeResult">-</b></div>
-<div class="cell">DIRECTION<b id="dogeSide">-</b></div>
-</div>
-</div>
-
-<div class="coin">
-<h2>🐸 PEPE BEAST</h2>
-<div class="price" id="pepePrice">Loading...</div>
-<div class="status" id="pepeStatus">Waiting for price</div>
-<div class="grid">
-<div class="cell">ENTRY<b id="pepeEntry">-</b></div>
-<div class="cell">TAKE PROFIT<b id="pepeTP">-</b></div>
-<div class="cell">STOP LOSS<b id="pepeSL">-</b></div>
-<div class="cell">STAKE<b>$1.00</b></div>
-<div class="cell">LAST RESULT<b id="pepeResult">-</b></div>
-<div class="cell">DIRECTION<b id="pepeSide">-</b></div>
-</div>
-</div>
-
-<div class="panel">
-<h2>📓 LIVE TRADE FEED</h2>
-<div id="feed" class="feed">BEAST V4 ready. Connect to Coinbase to begin.</div>
-</div>
-
-<div class="panel">
-<h2>TRADING SETTINGS</h2>
-<div class="grid">
-<div class="cell">TAKE PROFIT<b>2%</b></div>
-<div class="cell">STOP LOSS<b>1%</b></div>
-<div class="cell">FIXED STAKE<b>$1</b></div>
-<div class="cell">MAX POSITIONS<b>2</b></div>
-<div class="cell">SCAN SPEED<b>15 SEC</b></div>
-<div class="cell">MODE<b>PAPER</b></div>
-</div>
-<button class="reset" onclick="resetAll()">RESET V4 BALANCE TO $20</button>
-<div class="small">Paper trading only. No real orders are sent. Simulated exits use target prices when a price check detects a target crossing. Fees, slippage and movements between checks are not included.</div>
-</div>
-
+<h1>🤖 BEAST BOTH V5</h1>
+<p class="sub">COINBASE EXCHANGE MARKET DATA • PAPER TRADING ONLY • NO DERIV • NO MT5</p>
+<section class="panel balance">
+ <div>MY VIRTUAL EQUITY</div><div class="amount">$<span id="equity">20.00</span></div>
+ <div class="small">Starting $20.00 · Realized P/L: <b id="realized">$0.00</b> · Unrealized: <b id="unrealized">$0.00</b></div>
+ <div class="stats"><div><span>WINS</span><b class="good" id="wins">0</b></div><div><span>LOSSES</span><b class="bad" id="losses">0</b></div><div><span>CLOSED TRADES</span><b id="tradeCount">0</b></div></div>
+ <div class="small">Free cash: $<b id="cash">20.00</b> · Open positions: <b id="openCount">0</b>/2</div>
+ <button id="autoButton" class="mainbtn" onclick="toggleAuto()">▶ START AUTO BEAST</button>
+ <div class="small">Checks every 15 seconds while this page stays open.</div>
+</section>
+<section class="beast">
+ <h2>🐶 DOGE BEAST — <span id="sigDOGE" class="muted">WAITING</span></h2>
+ <div>Coinbase price: <b class="price" id="priceDOGE">—</b> <span id="changeDOGE" class="muted"></span></div>
+ <div class="grid">
+  <div><span>POSITION</span><b id="positionDOGE">NONE</b></div><div><span>ENTRY</span><b id="entryDOGE">—</b></div><div><span>TAKE PROFIT</span><b id="tpDOGE" class="good">—</b></div>
+  <div><span>STOP LOSS</span><b id="slDOGE" class="bad">—</b></div><div><span>STAKE</span><b id="stakeDOGE">—</b></div><div><span>UNREALIZED P/L</span><b id="pnlDOGE">—</b></div>
+ </div><div class="small" id="reasonDOGE">Waiting for candle data.</div>
+</section>
+<section class="beast pepe">
+ <h2>🐸 PEPE BEAST — <span id="sigPEPE" class="muted">WAITING</span></h2>
+ <div>Coinbase price: <b class="price" id="pricePEPE">—</b> <span id="changePEPE" class="muted"></span></div>
+ <div class="grid">
+  <div><span>POSITION</span><b id="positionPEPE">NONE</b></div><div><span>ENTRY</span><b id="entryPEPE">—</b></div><div><span>TAKE PROFIT</span><b id="tpPEPE" class="good">—</b></div>
+  <div><span>STOP LOSS</span><b id="slPEPE" class="bad">—</b></div><div><span>STAKE</span><b id="stakePEPE">—</b></div><div><span>UNREALIZED P/L</span><b id="pnlPEPE">—</b></div>
+ </div><div class="small" id="reasonPEPE">Waiting for candle data.</div>
+</section>
+<section class="panel">
+ <h3 style="color:var(--lime);margin:0">TRADING SETTINGS</h3>
+ <div class="settings">
+  <label>Fixed stake ($)<input id="stakeInput" type="number" min="1" max="20" step="1" value="5"></label>
+  <label>Take profit (%)<input id="tpInput" type="number" min="0.5" max="30" step="0.5" value="5"></label>
+  <label>Stop loss (%)<input id="slInput" type="number" min="0.5" max="20" step="0.5" value="3"></label>
+ </div>
+ <div class="small">Settings apply to new positions. Existing positions keep their original TP/SL.</div>
+</section>
+<section class="panel">
+ <h3 style="color:var(--lime);margin:0 0 8px">📓 LIVE TRADE FEED</h3><div id="feed" class="feed"><div class="small">Press START AUTO BEAST to begin scanning.</div></div>
+ <button class="resetbtn" onclick="resetAll()">RESET PAPER ACCOUNT TO $20</button>
+</section>
+<div class="notice"><b>How the signal works:</b> EMA 9/EMA 21 trend, RSI and recent candle momentum must agree. The bot does not force trades and may wait when conditions are unclear. A position closes only after a fetched market price reaches its TP or SL. Paper results exclude fees, spread, slippage and price movement between checks. Coinbase must provide DOGE-USD and PEPE-USD candle data in your browser. Keep this page open; browser background limits can delay checks.</div>
 <script>
-const START=20;
-const STAKE=1;
-const TP=0.02;
-const SL=0.01;
-const INTERVAL=15000;
-const SIGNAL=0.0002;
-const KEY="beast_both_v4";
-
-const coins={
- DOGE:{product:"DOGE-USD",digits:8},
- PEPE:{product:"PEPE-USD",digits:10}
-};
-
-let state={
- balance:START,
- wins:0,
- losses:0,
- total:0,
- positions:{DOGE:null,PEPE:null},
- results:{DOGE:"-",PEPE:"-"},
- feed:[]
-};
-
-let prices={DOGE:null,PEPE:null};
-let previous={DOGE:null,PEPE:null};
-let auto=false;
-let busy=false;
-let timer=null;
-
-function money(n){return "$"+Number(n).toFixed(4)}
-function fmt(n,symbol){
- if(n===null || n===undefined)return "-";
- return Number(n).toFixed(coins[symbol].digits);
-}
-function clock(){
- return new Date().toLocaleTimeString();
-}
-function log(message){
- state.feed.unshift(clock()+" "+message);
- state.feed=state.feed.slice(0,35);
- save();
- render();
-}
-function save(){
- try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){}
-}
-function load(){
- try{
-  const old=JSON.parse(localStorage.getItem(KEY));
-  if(old){
-   state={...state,...old};
-   if(!state.positions)state.positions={DOGE:null,PEPE:null};
-   if(!state.results)state.results={DOGE:"-",PEPE:"-"};
-   for(const s of ["DOGE","PEPE"]){
-    const p=state.positions[s];
-    if(p && (!Number.isFinite(p.entry)||!Number.isFinite(p.tp)||!Number.isFinite(p.sl))){
-     state.positions[s]=null;
-    }
-   }
-  }
- }catch(e){}
-}
-function render(){
- document.getElementById("balance").textContent=money(state.balance);
- document.getElementById("summary").textContent=
- "Started $20.0000 | Profit: "+money(state.balance-START);
- document.getElementById("wins").textContent=state.wins;
- document.getElementById("losses").textContent=state.losses;
- document.getElementById("trades").textContent=state.total;
- let count=Object.values(state.positions).filter(Boolean).length;
- document.getElementById("openCount").textContent=count+"/2";
-
- for(const s of ["DOGE","PEPE"]){
-  const id=s.toLowerCase();
-  const p=state.positions[s];
-  document.getElementById(id+"Price").textContent=
-   prices[s]===null?"Price unavailable":fmt(prices[s],s)+" USD";
-  document.getElementById(id+"Status").textContent=
-   p?"OPEN "+p.side+" • Paper position":
-   "NO OPEN POSITION";
-  document.getElementById(id+"Entry").textContent=p?fmt(p.entry,s):"-";
-  document.getElementById(id+"TP").textContent=p?fmt(p.tp,s):"-";
-  document.getElementById(id+"SL").textContent=p?fmt(p.sl,s):"-";
-  document.getElementById(id+"Result").textContent=state.results[s];
-  document.getElementById(id+"Side").textContent=p?p.side:"-";
- }
- document.getElementById("feed").innerHTML=
- state.feed.map(x=>"<div>"+escapeHTML(x)+"</div>").join("");
-}
-function escapeHTML(s){
- return String(s).replace(/[&<>"']/g,c=>({
- "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
- })[c]);
-}
-
-async function getPrice(s){
- const url="https://api.exchange.coinbase.com/products/"+
- coins[s].product+"/ticker";
- const response=await fetch(url,{cache:"no-store"});
- if(!response.ok)throw new Error(s+" HTTP "+response.status);
- const data=await response.json();
- const p=Number(data.price);
- if(!Number.isFinite(p)||p<=0)throw new Error(s+" invalid price");
- return p;
-}
-
-function openPosition(s,side,price){
- if(state.positions[s])return;
- const entry=price;
- const tp=side==="BUY"?entry*(1+TP):entry*(1-TP);
- const sl=side==="BUY"?entry*(1-SL):entry*(1+SL);
- state.positions[s]={side,entry,tp,sl,stake:STAKE};
- state.total++;
- state.results[s]="OPEN "+side;
- log(s+" "+side+" OPEN @ "+fmt(entry,s));
-}
-
-function closePosition(s,price,reason,target){
- const p=state.positions[s];
- if(!p)return;
- const exit=target;
- const move=p.side==="BUY"?
-  (exit-p.entry)/p.entry:
-  (p.entry-exit)/p.entry;
- const pnl=p.stake*move;
- state.balance+=pnl;
- if(pnl>0)state.wins++;
- else state.losses++;
- state.results[s]=reason+" "+(pnl>=0?"+":"")+money(pnl);
- state.positions[s]=null;
- log(s+" "+reason+" | P/L "+money(pnl));
-}
-
-function managePosition(s,price){
- const p=state.positions[s];
- if(!p)return;
- if(p.side==="BUY"){
-  if(price>=p.tp)closePosition(s,price,"TAKE PROFIT",p.tp);
-  else if(price<=p.sl)closePosition(s,price,"STOP LOSS",p.sl);
- }else{
-  if(price<=p.tp)closePosition(s,price,"TAKE PROFIT",p.tp);
-  else if(price>=p.sl)closePosition(s,price,"STOP LOSS",p.sl);
- }
-}
-
-function signal(s,price){
- if(!auto||state.positions[s]||previous[s]===null)return;
- const change=(price-previous[s])/previous[s];
- if(change>=SIGNAL)openPosition(s,"BUY",price);
- else if(change<=-SIGNAL)openPosition(s,"SELL",price);
-}
-
-async function scan(){
- if(busy)return;
- busy=true;
- let successes=0;
- let errors=[];
- try{
-  for(const s of ["DOGE","PEPE"]){
-   try{
-    const p=await getPrice(s);
-    const old=previous[s];
-    prices[s]=p;
-    successes++;
-    managePosition(s,p);
-    if(old!==null)signal(s,p);
-    previous[s]=p;
-   }catch(e){
-    errors.push(e.message);
-   }
-  }
-  if(successes>0){
-   document.getElementById("connection").innerHTML=
-    '<span class="good">COINBASE CONNECTED</span>';
-   document.getElementById("lastUpdate").textContent=
-    "Last successful check: "+clock()+" • "+successes+"/2 markets updated";
-  }
-  if(errors.length){
-   document.getElementById("connection").innerHTML=
-    '<span class="bad">PARTIAL MARKET ERROR: '+escapeHTML(errors.join(" | "))+'</span>';
-  }
-  if(successes===0){
-   document.getElementById("connection").innerHTML=
-    '<span class="bad">MARKET UNAVAILABLE • RETRYING</span>';
-  }
-  render();
- }finally{
-  busy=false;
- }
-}
-
-function toggleAuto(){
- auto=!auto;
- const btn=document.getElementById("autoBtn");
- if(auto){
-  btn.textContent="⏸ PAUSE AUTO BEAST";
-  btn.className="stop";
-  log("AUTO BEAST STARTED");
-  scan();
-  timer=setInterval(scan,INTERVAL);
- }else{
-  btn.textContent="▶️ START AUTO BEAST";
-  btn.className="start";
-  clearInterval(timer);
-  timer=null;
-  log("AUTO BEAST PAUSED");
- }
-}
-
-function resetAll(){
- if(!confirm("Reset V4 paper balance, positions and trade history to $20?"))return;
- auto=false;
- clearInterval(timer);
- timer=null;
- state={
-  balance:START,wins:0,losses:0,total:0,
-  positions:{DOGE:null,PEPE:null},
-  results:{DOGE:"-",PEPE:"-"},
-  feed:["V4 paper balance reset to $20"]
- };
- previous={DOGE:null,PEPE:null};
- document.getElementById("autoBtn").textContent="▶️ START AUTO BEAST";
- document.getElementById("autoBtn").className="start";
- save();
- render();
- scan();
-}
-
-load();
-render();
-scan();
+'use strict';
+const START_BALANCE=20, CHECK_MS=15000, MAX_POSITIONS=2;
+const PRODUCTS={DOGE:'DOGE-USD',PEPE:'PEPE-USD'};
+let state={cash:20,positions:{DOGE:null,PEPE:null},wins:0,losses:0,realized:0,feed:[]};
+let prices={DOGE:null,PEPE:null},signals={DOGE:null,PEPE:null},lastEntryCandle={DOGE:0,PEPE:0};
+let running=false,timer=null,busy=false;
+const $=id=>document.getElementById(id);
+function money(n){return (n<0?'-$':'$')+Math.abs(n).toFixed(2)}
+function fmtPrice(n){if(!Number.isFinite(n))return '—';return n>=1?n.toFixed(5):n>=0.001?n.toFixed(7):n.toFixed(10)}
+function addFeed(message,kind=''){state.feed.unshift({time:new Date().toLocaleTimeString(),message,kind});state.feed=state.feed.slice(0,80);renderFeed();save();}
+function save(){try{localStorage.setItem('beastBothV5',JSON.stringify(state));}catch(e){}}
+function load(){try{const raw=localStorage.getItem('beastBothV5');if(raw){const x=JSON.parse(raw);if(x&&Number.isFinite(x.cash)&&x.positions){state={...state,...x};}}}catch(e){}}
+function getSettings(){const stake=Number($('stakeInput').value),tp=Number($('tpInput').value),sl=Number($('slInput').value);if(!(stake>=1&&stake<=20&&tp>=0.5&&tp<=30&&sl>=0.5&&sl<=20))throw Error('Settings out of range.');return{stake,tp:tp/100,sl:sl/100};}
+function ema(values,period){const k=2/(period+1);let v=values[0];for(let i=1;i<values.length;i++)v=values[i]*k+v*(1-k);return v;}
+function rsi(values,period=14){if(values.length<=period)return 50;let gains=0,losses=0;for(let i=values.length-period;i<values.length;i++){const d=values[i]-values[i-1];if(d>0)gains+=d;else losses-=d;}if(losses===0)return 100;return 100-(100/(1+gains/losses));}
+async function fetchCandles(symbol){const product=PRODUCTS[symbol];const url=`https://api.exchange.coinbase.com/products/${product}/candles?granularity=60`;const response=await fetch(url,{headers:{'Accept':'application/json'}});if(!response.ok)throw Error(`${product}: Coinbase HTTP ${response.status}`);const raw=await response.json();if(!Array.isArray(raw)||raw.length<30)throw Error(`${product}: insufficient candle data`);return raw.map(c=>({time:Number(c[0]),low:Number(c[1]),high:Number(c[2]),open:Number(c[3]),close:Number(c[4]),volume:Number(c[5])})).sort((a,b)=>a.time-b.time);}
+function analyse(candles){const closed=candles.slice(0,-1);if(closed.length<25)return{side:null,reason:'Waiting for enough completed 1-minute candles.'};const closes=closed.map(c=>c.close);const e9=ema(closes.slice(-40),9),e21=ema(closes.slice(-60),21),rv=rsi(closes,14);const last=closes.at(-1),prev=closes.at(-2),prev2=closes.at(-3);const rising=last>prev&&prev>prev2,falling=last<prev&&prev<prev2;
+ if(e9>e21&&last>e9&&rising&&rv>=52&&rv<=70)return{side:'BUY',reason:`Bullish: EMA9 above EMA21, rising candles, RSI ${rv.toFixed(1)}.`,candle:closed.at(-1).time};
+ if(e9<e21&&last<e9&&falling&&rv>=30&&rv<=48)return{side:'SELL',reason:`Bearish: EMA9 below EMA21, falling candles, RSI ${rv.toFixed(1)}.`,candle:closed.at(-1).time};
+ return{side:null,reason:`No confirmed setup · RSI ${rv.toFixed(1)} · EMA9 ${e9>e21?'above':'below'} EMA21.`,candle:closed.at(-1).time};}
+function equity(){let total=state.cash;for(const s of Object.keys(PRODUCTS)){const p=state.positions[s];if(p){const price=prices[s]||p.entry;total+=p.stake+unrealized(p,price);}}return total;}
+function unrealized(p,price){return p.stake*((p.side==='BUY'?(price-p.entry):(p.entry-price))/p.entry);}
+function openPosition(symbol,side,price,candle){let cfg;try{cfg=getSettings();}catch(e){addFeed(e.message,'bad');return;}if(state.positions[symbol]||Object.values(state.positions).filter(Boolean).length>=MAX_POSITIONS)return;if(state.cash<cfg.stake){addFeed(`${symbol}: not enough free cash for $${cfg.stake.toFixed(2)} stake.`,'bad');return;}const tp=side==='BUY'?price*(1+cfg.tp):price*(1-cfg.tp),sl=side==='BUY'?price*(1-cfg.sl):price*(1+cfg.sl);state.cash-=cfg.stake;state.positions[symbol]={side,entry:price,tp,sl,stake:cfg.stake,opened:Date.now()};lastEntryCandle[symbol]=candle;addFeed(`${symbol} ${side} OPEN · ${fmtPrice(price)} · stake ${money(cfg.stake)}`,'good');render();}
+function closePosition(symbol,price,why){const p=state.positions[symbol];if(!p)return;const pnl=unrealized(p,price);state.cash+=p.stake+pnl;state.realized+=pnl;if(pnl>=0)state.wins++;else state.losses++;state.positions[symbol]=null;addFeed(`${symbol} ${p.side} ${why} · ${money(pnl)} · exit ${fmtPrice(price)}`,pnl>=0?'good':'bad');render();}
+function managePosition(symbol,price){const p=state.positions[symbol];if(!p)return;if(p.side==='BUY'){if(price>=p.tp)closePosition(symbol,price,'TAKE PROFIT');else if(price<=p.sl)closePosition(symbol,price,'STOP LOSS');}else{if(price<=p.tp)closePosition(symbol,price,'TAKE PROFIT');else if(price>=p.sl)closePosition(symbol,price,'STOP LOSS');}}
+function render(){let unreal=0;for(const s of Object.keys(PRODUCTS)){const p=state.positions[s],price=prices[s];if(p&&price)unreal+=unrealized(p,price);$('price'+s).textContent=price?('$'+fmtPrice(price)):'—';$('position'+s).textContent=p?p.side:'NONE';$('entry'+s).textContent=p?fmtPrice(p.entry):'—';$('tp'+s).textContent=p?fmtPrice(p.tp):'—';$('sl'+s).textContent=p?fmtPrice(p.sl):'—';$('stake'+s).textContent=p?money(p.stake):'—';const pl=p&&price?unrealized(p,price):null;$('pnl'+s).textContent=pl===null?'—':money(pl);$('pnl'+s).className=pl===null?'':pl>=0?'good':'bad';$('sig'+s).textContent=signals[s]?.side||'WAIT';$('reason'+s).textContent=signals[s]?.reason||'Waiting for candle data.';}
+ $('cash').textContent=state.cash.toFixed(2);$('unrealized').textContent=money(unreal);$('realized').textContent=money(state.realized);$('equity').textContent=equity().toFixed(2);$('wins').textContent=state.wins;$('losses').textContent=state.losses;$('tradeCount').textContent=state.wins+state.losses;$('openCount').textContent=Object.values(state.positions).filter(Boolean).length;renderFeed();save();}
+function renderFeed(){const f=$('feed');f.innerHTML='';if(!state.feed.length){f.innerHTML='<div class="small">No trades yet.</div>';return;}for(const item of state.feed){const d=document.createElement('div');d.className='row';const a=document.createElement('span'),b=document.createElement('span');a.textContent=item.time+' '+item.message;b.textContent=item.kind==='good'?'●':item.kind==='bad'?'●':'';b.className=item.kind;d.append(a,b);f.appendChild(d);}}
+async function scan(){if(busy)return;busy=true;try{for(const symbol of Object.keys(PRODUCTS)){try{const candles=await fetchCandles(symbol);const current=candles.at(-1).close;prices[symbol]=current;const sig=analyse(candles);signals[symbol]=sig;managePosition(symbol,current);if(!state.positions[symbol]&&sig.side&&sig.candle&&sig.candle!==lastEntryCandle[symbol]&&Object.values(state.positions).filter(Boolean).length<MAX_POSITIONS){openPosition(symbol,sig.side,current,sig.candle);} }catch(err){signals[symbol]={side:null,reason:err.message};}}
+ render();if(equity()<=0){stopAuto();addFeed('Account equity reached $0. Auto trading stopped.','bad');}}
+ finally{busy=false;}}
+function toggleAuto(){if(running)stopAuto();else startAuto();}
+function startAuto(){running=true;$('autoButton').textContent='⏸ PAUSE AUTO BEAST';$('autoButton').classList.add('stopbtn');addFeed('AUTO BEAST STARTED · Coinbase candle signals','');scan();timer=setInterval(scan,CHECK_MS);}
+function stopAuto(){running=false;if(timer)clearInterval(timer);timer=null;$('autoButton').textContent='▶ START AUTO BEAST';$('autoButton').classList.remove('stopbtn');}
+function resetAll(){stopAuto();state={cash:START_BALANCE,positions:{DOGE:null,PEPE:null},wins:0,losses:0,realized:0,feed:[]};prices={DOGE:null,PEPE:null};signals={DOGE:null,PEPE:null};lastEntryCandle={DOGE:0,PEPE:0};addFeed('Paper account reset to $20.00.');render();}
+load();render();
 </script>
-</body>
-</html>
+</body></html>
